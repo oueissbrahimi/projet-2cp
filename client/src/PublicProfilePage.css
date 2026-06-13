@@ -1,0 +1,439 @@
+.pp-hero-avatar-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pp-hero-avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+}
+
+.pp-type-pill {
+  width: auto;
+  min-width: 64px;
+  padding: 0 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--app-green-dark);
+  text-transform: uppercase;
+}
+
+.pp-name-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.pp-badge-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.pp-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pp-info-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  min-height: 98px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pp-info-card--wide {
+  grid-column: 1 / -1;
+  min-height: 82px;
+}
+
+.pp-info-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.pp-info-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pp-info-value {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 360px) {
+  .pp-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pp-contact-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.04) 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pp-contact-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pp-contact-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.pp-contact-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.pp-contact-actions {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.pp-contact-btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.pp-contact-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pp-contact-btn--primary {
+  background: var(--app-green-dark);
+  color: white;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+}
+
+.pp-contact-btn--primary:hover:not(:disabled) {
+  background: #15803d;
+  box-shadow: 0 4px 8px rgba(22, 163, 74, 0.3);
+  transform: translateY(-1px);
+}
+
+.pp-contact-btn--secondary {
+  background: var(--bg-primary);
+  color: var(--app-green-dark);
+  border: 1.5px solid var(--app-green-dark);
+}
+
+.pp-contact-btn--secondary:hover:not(:disabled) {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: #15803d;
+}
+
+@media (max-width: 480px) {
+  .pp-contact-card {
+    padding: 12px;
+  }
+
+  .pp-contact-btn {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}
+
+/* ── Interactive Enhancements ─────────────────────────────────────── */
+
+@keyframes ppFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ppAvatarIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ppCardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.pp-page-enter {
+  animation: ppFadeIn 0.35s ease-out both;
+}
+
+/* Avatar hover */
+.pp-hero-avatar-wrap-interactive {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  cursor: default;
+}
+.pp-hero-avatar-wrap-interactive .pp-hero-avatar {
+  transition: transform 0.25s ease-out, box-shadow 0.25s ease;
+}
+.pp-hero-avatar-wrap-interactive:hover .pp-hero-avatar {
+  transform: scale(1.06);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+}
+
+.pp-hero-avatar-anim {
+  animation: ppAvatarIn 0.4s ease-out both;
+}
+
+/* Info card hover */
+.pp-info-card-interactive {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  min-height: 98px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease-out;
+}
+.pp-info-card-interactive:hover {
+  border-color: rgba(16, 185, 129, 0.25);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.06);
+  transform: translateY(-2px);
+}
+.pp-info-card-interactive:active {
+  transform: translateY(0);
+}
+
+.pp-info-card--wide-interactive {
+  grid-column: 1 / -1;
+  min-height: 82px;
+}
+
+/* Info card staggered entry */
+.pp-info-card-anim {
+  animation: ppCardIn 0.3s ease-out both;
+}
+.pp-info-card-anim:nth-child(2) { animation-delay: 0.05s; }
+.pp-info-card-anim:nth-child(3) { animation-delay: 0.1s; }
+.pp-info-card-anim:nth-child(4) { animation-delay: 0.15s; }
+.pp-info-card-anim:nth-child(5) { animation-delay: 0.2s; }
+
+/* Back button hover */
+.pp-back-btn-interactive {
+  transition: transform 0.15s ease-out;
+  border-radius: 6px;
+}
+.pp-back-btn-interactive:hover {
+  transform: translateX(-3px);
+}
+.pp-back-btn-interactive:active {
+  transform: translateX(-1px) scale(0.95);
+}
+.pp-back-btn-interactive:focus-visible {
+  outline: 2px solid rgba(16, 185, 129, 0.5);
+  outline-offset: 4px;
+}
+
+/* Type pill hover */
+.pp-type-pill-interactive {
+  width: auto;
+  min-width: 64px;
+  padding: 0 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--app-green-dark);
+  text-transform: uppercase;
+  transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+  cursor: default;
+}
+.pp-type-pill-interactive:hover {
+  transform: scale(1.02);
+}
+
+/* Contact card entry */
+.pp-contact-card-anim {
+  animation: ppCardIn 0.35s ease-out both;
+  animation-delay: 0.1s;
+}
+
+/* Sender card entry */
+.pp-sender-card-anim {
+  animation: ppCardIn 0.3s ease-out both;
+  animation-delay: 0.05s;
+}
+
+/* Hero Section - Card on mobile */
+.pp-hero-section {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 24px 16px;
+  margin-bottom: 24px;
+  animation: ppCardIn 0.3s ease-out both;
+}
+
+/* Dark mode adjustments */
+.dark-mode .pp-info-card-interactive:hover {
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+}
+
+/* ── Desktop Layout Adjustments ─────────────────────────────────── */
+@media (min-width: 1024px) {
+  /* Two-column split layout */
+  .pp-desktop-split {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .pp-desktop-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .pp-desktop-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Hero section with large avatar + name beside */
+  .pp-hero-section {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 24px;
+    margin-bottom: 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    animation: ppCardIn 0.3s ease-out both;
+  }
+
+  .pp-hero-avatar-wrap-interactive {
+    margin: 0;
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+  }
+
+  .pp-hero-avatar-large {
+    width: 140px !important;
+    height: 140px !important;
+    border-radius: 12px !important;
+    object-fit: cover;
+    border: 2px solid rgba(16, 185, 129, 0.2) !important;
+  }
+
+  .pp-name-section {
+    align-items: flex-start;
+    text-align: left;
+    justify-content: center;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .pp-badge-section {
+    margin-top: 0;
+    justify-content: flex-end;
+  }
+
+  .pp-name-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+
+  /* Info cards in left column */
+  .pp-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .pp-info-card-interactive {
+    padding: 16px;
+    min-height: 110px;
+  }
+
+  .pp-info-card--wide-interactive {
+    grid-column: 1 / -1;
+    min-height: 90px;
+  }
+
+  /* Contact card sticky on right */
+  .pp-contact-card--sticky {
+    position: sticky;
+    margin-top: 0;
+    padding: 32px;
+    gap: 24px;
+  }
+
+  .pp-contact-title {
+    font-size: 18px;
+  }
+
+  .pp-contact-subtitle {
+    font-size: 14px;
+  }
+
+  .pp-contact-actions {
+    gap: 12px;
+  }
+
+  .pp-contact-btn {
+    padding: 14px 20px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  .sd-body {
+    padding: 0;
+  }
+}

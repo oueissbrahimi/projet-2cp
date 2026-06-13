@@ -1,0 +1,383 @@
+/* ═══════════════════════════════════════════════════════════
+   EditActiveShipment.css
+   Edit-page-only overrides & extensions on top of
+   Createshipment.css. Mobile-first, desktop at ≥ 1024px.
+═══════════════════════════════════════════════════════════ */
+
+/* ── Screen: full-width on desktop ────────────────────────*/
+.eas-screen {
+  align-items: flex-start;
+}
+
+/* ── Container: fills the desktop canvas ──────────────────*/
+.eas-container {
+  /* Mobile: same narrow card as CreateShipment */
+}
+
+/* ── Header enhancements ───────────────────────────────────*/
+.eas-header {
+  gap: 12px;
+}
+
+.eas-header-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.eas-header-subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  margin-top: 2px;
+}
+
+/* ── Loading state ─────────────────────────────────────────*/
+.eas-loading {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.eas-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--border-color);
+  border-top-color: var(--app-green);
+  border-radius: 50%;
+  animation: easSpin 0.7s linear infinite;
+}
+
+@keyframes easSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Body: single column on mobile ────────────────────────*/
+.eas-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 20px 20px 0;
+  overflow-y: auto;
+}
+
+/* ── Status / Priority pills row ──────────────────────────*/
+.eas-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.eas-status-pill,
+.eas-priority-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 99px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+/* ── Section wrapper ───────────────────────────────────────*/
+.eas-section {
+  margin-bottom: 24px;
+}
+
+/* ── Route visualizer card ─────────────────────────────────*/
+.eas-route-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-primary);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s ease, background 0.3s ease;
+}
+
+.eas-route-stop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 0;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eas-route-stop span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eas-route-stop--origin svg { color: var(--app-green); flex-shrink: 0; }
+.eas-route-stop--dest   svg { color: #3b82f6; flex-shrink: 0; }
+
+.eas-route-connector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.eas-route-line {
+  width: 20px;
+  height: 1.5px;
+  background: var(--border-color);
+  border-radius: 1px;
+}
+
+.eas-route-arrow {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  line-height: 1;
+}
+
+/* ── Status chip grid ──────────────────────────────────────*/
+.eas-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.eas-status-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 9px 8px;
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.eas-status-chip:hover {
+  border-color: var(--app-green);
+  color: var(--app-green);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.eas-status-chip--active {
+  font-weight: 700;
+}
+
+/* ── Inline success message ────────────────────────────────*/
+.eas-success-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* ── Save Button (hidden on mobile, shown on desktop) ──────*/
+.eas-save-btn {
+  display: none; /* hidden on mobile — footer button used instead */
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--app-green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  margin-top: 4px;
+}
+
+.eas-save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(16, 185, 129, 0.45);
+}
+
+.eas-save-btn:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+.eas-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Mobile footer ─────────────────────────────────────────*/
+.eas-footer {
+  /* inherits cs-footer — no override needed */
+}
+
+/* ── Button spinner ────────────────────────────────────────*/
+.eas-btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(16, 185, 129, 0.35);
+  border-top-color: var(--app-green);
+  border-radius: 50%;
+  animation: easSpin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+.eas-btn-spinner--white {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DESKTOP  ≥ 1024px
+═══════════════════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+
+  /* Container: adopt the CreateShipment desktop panel style */
+  .eas-container {
+    width: calc(100vw - var(--sb-sidebar-width, 280px) - 96px);
+    max-width: 1200px;
+    min-height: calc(100vh - 48px);
+    margin: 24px auto 24px calc(var(--sb-sidebar-width, 280px) + 48px);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    transform: none;
+    opacity: 1;
+  }
+
+  /* Header: wider padding, subtitle visible */
+  .eas-header {
+    padding: 20px 32px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .cs-title {
+    font-size: 22px;
+  }
+
+  .eas-header-subtitle {
+    max-width: 340px;
+    font-size: 12px;
+  }
+
+  /* Body: two-column grid */
+  .eas-body {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 40px;
+    padding: 32px;
+    overflow-y: auto;
+  }
+
+  /* Each column stacks its sections vertically */
+  .eas-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+  }
+
+  .eas-col--right {
+    position: sticky;
+    top: 88px;
+    height: fit-content;
+  }
+
+  /* Route visualizer: slightly taller on desktop */
+  .eas-route-card {
+    padding: 14px 18px;
+    margin-bottom: 18px;
+  }
+
+  .eas-route-stop {
+    font-size: 13px;
+  }
+
+  .eas-route-line {
+    width: 28px;
+  }
+
+  /* Status chips: 3 per row on desktop too, but larger */
+  .eas-status-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .eas-status-chip {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  /* Show desktop save button, hide mobile footer */
+  .eas-save-btn {
+    display: flex;
+  }
+
+  .eas-footer {
+    display: none !important;
+  }
+
+  /* Pills row: slightly larger */
+  .eas-status-pill,
+  .eas-priority-pill {
+    font-size: 11px;
+    padding: 5px 14px;
+  }
+
+  /* Inline success aligned left */
+  .eas-success-inline {
+    margin-bottom: 14px;
+  }
+}
+
+/* ── Dark mode tweaks ──────────────────────────────────────*/
+.dark-mode .eas-route-card {
+  background: rgba(16, 185, 129, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-mode .eas-status-chip {
+  background: var(--bg-primary);
+}
+
+.dark-mode .eas-status-chip:hover {
+  background: rgba(16, 185, 129, 0.08);
+}

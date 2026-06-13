@@ -1,0 +1,982 @@
+
+
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ThemeProvider } from "./ThemeContext";
+import LandingPage from "./Getstarted";
+import CreateAccountScreen from "./Createaccountscreen";
+import IndividualRegScreen from "./individualregscreen";
+import BusinessRegScreen from "./Businessregscreen";
+import Verification from "./Verification";
+import Login from "./Login";
+import ForgotPassword from "./Forgotpassword";
+import ResetPassword from "./Resetpassword";
+import Dashboard from "./Dashboard";
+import Shipments from "./Shipments";
+import RoutesScreen from "./Routes";
+import ActiveShipmentsPage from "./ActiveShipmentsPage";
+import ActiveShipmentDetailsPage from "./ActiveShipmentDetailsPage";
+import EditActiveShipmentPage from "./EditActiveShipmentPage";
+import ActiveRoutesPage from "./ActiveRoutesPage";
+import ActiveRouteDetailsPage from "./ActiveRouteDetailsPage";
+import EditActiveRoutePage from "./EditActiveRoutePage";
+import Profile from "./Profile";
+import Vehicle from "./Vehicle";
+import CreateRoute from "./Createroute";
+import ShipmentDetails from "./Shipmentdetails";
+import CreateShipment from "./Createshipment";
+import Notifications from "./Notifications";
+import AdminPanel from "./AdminPanel";
+import UsersList from "./UsersList";
+import AdminSubscriptions from "./AdminSubscriptions";
+import EditProfilePage from "./EditProfilePage";
+import ProfileSettingsPage from "./ProfileSettingsPage";
+import ActiveDevicesPage from "./ActiveDevicesPage";
+import AboutUsPage from "./AboutUsPage";
+import PublicProfilePage from "./PublicProfilePage";
+import AddVehicle from "./AddVehicle";
+import { getMyProfile } from "./services/profileService";
+import SubscriptionPlans from './SubscriptionPlans';
+import SubscriptionDetailsPage from "./SubscriptionDetailsPage";
+import { getNotifications } from "./services/notificationService";
+import GlobalToaster from "./GlobalToaster";
+import Chat from "./Chat";
+import { UserProvider } from "./contexts/UserContext";
+import "./App.css";
+import "sonner/dist/styles.css";
+
+
+const ADMIN_ROLE = "ADMIN";
+
+const isAdminRole = (role) =>
+  String(role || "").trim().toUpperCase() === ADMIN_ROLE;
+
+const getStoredRole = () => {
+  try {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    return storedUser?.role || "USER";
+  } catch {
+    return "USER";
+  }
+};
+
+// ── Extract current user ID from stored token or user object ──────────────────
+const getStoredUserId = () => {
+  try {
+    // First try from stored user object
+    const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
+    if (storedUser?.id) return storedUser.id;
+    if (storedUser?._id) return storedUser._id;
+
+    // Fallback: decode JWT payload
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+    const parts = token.split(".");
+    if (parts.length !== 3) return null;
+    const payload = JSON.parse(atob(parts[1]));
+    return payload?.id || payload?.userId || payload?.sub || null;
+  } catch {
+    return null;
+  }
+};
+
+const getPathForScreen = (screen, { shipmentId, subscriptionId, activeShipmentId, activeRouteId, routeId, publicUserId, resetToken } = {}) => {
+  switch (screen) {
+    case "landing":             return "/";
+    case "login":               return "/login";
+    case "forgot":              return "/forgot-password";
+    case "create":              return "/create-account";
+    case "chooseType":          return "/register/type";
+    case "individual":          return "/register/individual";
+    case "business":            return "/register/business";
+    case "verification":        return "/verification";
+    case "dashboard":           return "/dashboard";
+    case "shipments":           return "/shipments";
+    case "routes":              return "/routes";
+    case "routeDetails":
+      return routeId != null ? `/routes/${encodeURIComponent(String(routeId))}` : "/routes";
+    case "profile":             return "/profile";
+    case "publicProfile":
+      return publicUserId != null ? `/users/${encodeURIComponent(String(publicUserId))}` : "/profile";
+    case "editProfile":         return "/profile/edit";
+    case "profileSettings":     return "/profile/settings";
+    case "about":               return "/about";
+    case "activeDevices":       return "/profile/settings/devices";
+    case "vehicle":             return "/vehicles/create";
+    case "editVehicle":         return "/vehicles/edit";
+    case "createRoute":         return "/routes/create";
+    case "createShipment":      return "/shipments/create";
+    case "shipmentDetails":
+      return shipmentId != null ? `/shipments/${encodeURIComponent(String(shipmentId))}` : "/shipments";
+    case "resetPassword":
+      return resetToken ? `/resetpassword/${encodeURIComponent(String(resetToken))}` : "/resetpassword";
+    case "subscription":        return "/subscription";
+    case "notifications":       return "/notifications";
+    case "adminPanel":          return "/adminPanel";
+    case "usersList":           return "/adminPanel/users";
+    case "adminSubscriptions":  return "/adminPanel/subscriptions";
+    case "subscriptionDetails":
+      return subscriptionId != null ? `/subscription/details/${encodeURIComponent(String(subscriptionId))}` : "/subscription";
+    case "activeShipments":     return "/active/shipments";
+    case "activeShipmentDetails":
+      return activeShipmentId != null ? `/active/shipments/${encodeURIComponent(String(activeShipmentId))}` : "/active/shipments";
+    case "editActiveShipment":
+      return activeShipmentId != null ? `/active/shipments/${encodeURIComponent(String(activeShipmentId))}/edit` : "/active/shipments";
+    case "activeRoutes":        return "/active/routes";
+    case "activeRouteDetails":
+      return activeRouteId != null ? `/active/routes/${encodeURIComponent(String(activeRouteId))}` : "/active/routes";
+    case "editActiveRoute":
+      return activeRouteId != null ? `/active/routes/${encodeURIComponent(String(activeRouteId))}/edit` : "/active/routes";
+    case "chat":                return "/chat";
+    default:                    return "/";
+  }
+};
+
+const hasAuthToken = () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return false;
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return false;
+    }
+    const payload = JSON.parse(atob(parts[1]));
+    const exp = Number(payload?.exp);
+    if (Number.isFinite(exp) && exp * 1000 <= Date.now()) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return false;
+    }
+    return true;
+  } catch {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    return false;
+  }
+};
+
+const publicScreens = new Set([
+  "landing", "create", "chooseType", "login",
+  "verification", "forgot", "resetPassword", "individual", "business",
+]);
+
+const adminOnlyScreens = new Set(["adminPanel", "usersList", "adminSubscriptions"]);
+
+const resolveScreenFromPath = (pathname) => {
+  const normalized = pathname.replace(/\/+$/, "") || "/";
+
+  if (normalized === "/") {
+    if (hasAuthToken()) return { screen: "dashboard", redirectTo: "/dashboard" };
+    return { screen: "landing" };
+  }
+  if (normalized === "/login")               return { screen: "login" };
+  if (normalized === "/forgot-password")     return { screen: "forgot" };
+  if (normalized === "/create-account")      return { screen: "create" };
+  if (normalized === "/register/type")       return { screen: "chooseType" };
+  if (normalized === "/register/individual") return { screen: "individual" };
+  if (normalized === "/register/business")   return { screen: "business" };
+  if (normalized === "/verification")        return { screen: "verification" };
+  if (normalized === "/dashboard")           return { screen: "dashboard" };
+  if (normalized === "/shipments")           return { screen: "shipments" };
+  if (normalized === "/routes")              return { screen: "routes" };
+
+  if (normalized.startsWith("/routes/")) {
+    const routeId = decodeURIComponent(normalized.split("/")[2] || "").trim();
+    if (routeId && routeId !== "create") return { screen: "routeDetails", routeId };
+  }
+
+  if (normalized === "/profile")             return { screen: "profile" };
+
+  if (normalized.startsWith("/users/")) {
+    const publicUserId = decodeURIComponent(normalized.split("/")[2] || "").trim();
+    if (publicUserId) return { screen: "publicProfile", publicUserId };
+  }
+
+  if (normalized === "/profile/edit")              return { screen: "editProfile" };
+  if (normalized === "/profile/settings")          return { screen: "profileSettings" };
+  if (normalized === "/about")                     return { screen: "about" };
+  if (normalized === "/profile/settings/devices")  return { screen: "activeDevices" };
+  if (normalized === "/vehicles/create")           return { screen: "vehicle" };
+  if (normalized === "/vehicles/edit")             return { screen: "editVehicle" };
+  if (normalized === "/routes/create")             return { screen: "createRoute" };
+  if (normalized === "/shipments/create")          return { screen: "createShipment" };
+  if (normalized === "/shipments/details")         return { screen: "shipmentDetails", shipmentId: null };
+  if (normalized === "/subscription")              return { screen: "subscription" };
+
+  if (normalized.startsWith("/shipments/")) {
+    const shipmentId = decodeURIComponent(normalized.split("/")[2] || "").trim();
+    if (shipmentId) return { screen: "shipmentDetails", shipmentId };
+  }
+
+  if (normalized.startsWith("/resetpassword/")) {
+    const resetToken = decodeURIComponent(normalized.split("/")[2] || "").trim();
+    return { screen: "resetPassword", resetToken };
+  }
+  if (normalized === "/resetpassword")   return { screen: "resetPassword", resetToken: "" };
+  if (normalized === "/notifications")   return { screen: "notifications" };
+  if (normalized === "/adminPanel")      return { screen: "adminPanel" };
+  if (normalized === "/adminPanel/users") return { screen: "usersList" };
+  if (normalized === "/adminPanel/subscriptions") return { screen: "adminSubscriptions" };
+
+  if (normalized.startsWith("/subscription/details/")) {
+    const subId = decodeURIComponent(normalized.split("/")[3] || "").trim();
+    if (subId) return { screen: "subscriptionDetails", subscriptionId: subId };
+  }
+
+  if (normalized === "/active/shipments") return { screen: "activeShipments" };
+
+  if (normalized.startsWith("/active/shipments/") && normalized.endsWith("/edit")) {
+    const activeShipmentId = decodeURIComponent(normalized.split("/")[3] || "").trim();
+    if (activeShipmentId) return { screen: "editActiveShipment", activeShipmentId };
+  }
+  if (normalized.startsWith("/active/shipments/")) {
+    const activeShipmentId = decodeURIComponent(normalized.split("/")[3] || "").trim();
+    if (activeShipmentId) return { screen: "activeShipmentDetails", activeShipmentId };
+  }
+
+  if (normalized === "/active/routes") return { screen: "activeRoutes" };
+
+  if (normalized.startsWith("/active/routes/") && normalized.endsWith("/edit")) {
+    const activeRouteId = decodeURIComponent(normalized.split("/")[3] || "").trim();
+    if (activeRouteId) return { screen: "editActiveRoute", activeRouteId };
+  }
+  if (normalized.startsWith("/active/routes/")) {
+    const activeRouteId = decodeURIComponent(normalized.split("/")[3] || "").trim();
+    if (activeRouteId) return { screen: "activeRouteDetails", activeRouteId };
+  }
+
+  if (normalized === "/chat") return { screen: "chat" };
+
+  return { screen: "landing" };
+};
+
+export default function App() {
+  const location       = useLocation();
+  const routerNavigate = useNavigate();
+  const pendingPathRef  = useRef(null);
+  const backStackRef    = useRef([]);
+
+  const [current,  setCurrent]  = useState("landing");
+  const [next,     setNext]     = useState(null);
+  const [phase,    setPhase]    = useState("idle");
+  const [direction, setDirection] = useState("forward");
+
+  const [role,                          setRole]                          = useState("Individual");
+  const [selectedShipmentId,            setSelectedShipmentId]            = useState(null);
+  const [selectedSubscriptionId,        setSelectedSubscriptionId]        = useState(null);
+  const [selectedRouteId,               setSelectedRouteId]               = useState(null);
+  const [selectedActiveShipmentId,      setSelectedActiveShipmentId]      = useState(null);
+  const [selectedActiveRouteId,         setSelectedActiveRouteId]         = useState(null);
+  const [selectedPublicUserId,          setSelectedPublicUserId]          = useState(null);
+  const [selectedEditVehicle,           setSelectedEditVehicle]           = useState(null);
+  const [shipmentDetailsBackScreen,     setShipmentDetailsBackScreen]     = useState("shipments");
+  const [subscriptionDetailsBackScreen, setSubscriptionDetailsBackScreen] = useState("subscription");
+  const [routeDetailsBackScreen,        setRouteDetailsBackScreen]        = useState("routes");
+  const [activeShipmentBackScreen,      setActiveShipmentBackScreen]      = useState("activeShipments");
+  const [activeRouteBackScreen,         setActiveRouteBackScreen]         = useState("activeRoutes");
+  const [publicProfileBackScreen,       setPublicProfileBackScreen]       = useState("dashboard");
+  const [shipmentsRefreshKey,           setShipmentsRefreshKey]           = useState(0);
+  const [displayName,                   setDisplayName]                   = useState("User");
+  const [userRole,                      setUserRole]                      = useState(getStoredRole());
+
+  // ── currentUserId — used by Dashboard (badge) and Chat (fromUser) ──────────
+  const [currentUserId, setCurrentUserId] = useState(() => getStoredUserId());
+
+  const [accountState, setAccountState] = useState({
+    loading: true,
+    hasProfile: true,
+    isVerified: true,
+    isSuspended: false,
+    type: "INDIVIDUAL",
+  });
+  const [resetToken,                    setResetToken]                    = useState("");
+  const [forgotBackScreen,              setForgotBackScreen]              = useState("login");
+  const [resetPasswordBackScreen,       setResetPasswordBackScreen]       = useState("login");
+  const [notificationsBackScreen,       setNotificationsBackScreen]       = useState("dashboard");
+  const [hasUnreadNotifications,        setHasUnreadNotifications]        = useState(false);
+
+  // ── Suspended action banner ──────────────────────────────────────────────────
+  const [suspendedBanner, setSuspendedBanner] = useState(null); // { message }
+
+  useEffect(() => {
+    const handler = (e) => {
+      setSuspendedBanner({ message: e.detail?.message || "You're suspended. Contact admin to review your state." });
+    };
+    window.addEventListener('user-suspended', handler);
+    return () => window.removeEventListener('user-suspended', handler);
+  }, []);
+
+  // ── OAuth token from URL ─────────────────────────────────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const token  = params.get("token");
+    const userEncoded = params.get("user");
+    if (!token) return;
+    try {
+      localStorage.setItem("token", token);
+      sessionStorage.setItem("oauthSetupFlow", "google");
+      if (userEncoded) {
+        const user = JSON.parse(decodeURIComponent(userEncoded));
+        localStorage.setItem("user", JSON.stringify(user));
+        // Capture userId right after OAuth login
+        setCurrentUserId(user?.id || user?._id || null);
+      }
+      routerNavigate(location.pathname || "/dashboard", { replace: true });
+    } catch {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      routerNavigate("/login", { replace: true });
+    }
+  }, [location.pathname, location.search, routerNavigate]);
+
+  const clearResetPath = () => { routerNavigate("/", { replace: true }); };
+
+  const navigate = (to, dir = "forward", payload = {}) => {
+    if (phase !== "idle") return;
+
+    let resolvedTarget = to;
+
+    if (dir === "forward" && current && current !== to) {
+      backStackRef.current.push(current);
+    }
+    if (dir === "back") {
+      resolvedTarget = to || backStackRef.current.pop() || "dashboard";
+    }
+
+    if (adminOnlyScreens.has(resolvedTarget) && !isAdminRole(userRole)) return;
+
+    const nextShipmentId      = payload.shipmentId      ?? selectedShipmentId;
+    const nextSubscriptionId  = payload.subscriptionId  ?? selectedSubscriptionId;
+    const nextRouteId         = payload.routeId         ?? selectedRouteId;
+    const nextActiveShipmentId = payload.activeShipmentId ?? selectedActiveShipmentId;
+    const nextActiveRouteId   = payload.activeRouteId   ?? selectedActiveRouteId;
+    const nextPublicUserId    = payload.userId          ?? selectedPublicUserId;
+    const nextResetToken      = payload.token           ?? resetToken;
+
+    if (resolvedTarget === "shipmentDetails") {
+      setShipmentDetailsBackScreen(
+        payload.from ||
+        (current === "publicProfile" ? publicProfileBackScreen :
+          current === "shipmentDetails" ? shipmentDetailsBackScreen : current) ||
+        "shipments"
+      );
+    }
+    if (resolvedTarget === "subscriptionDetails") {
+      setSubscriptionDetailsBackScreen(
+        payload.from ||
+        (current === "subscriptionDetails" ? subscriptionDetailsBackScreen : current) ||
+        "subscription"
+      );
+    }
+    if (resolvedTarget === "routeDetails") {
+      setRouteDetailsBackScreen(
+        payload.from ||
+        (current === "publicProfile" ? publicProfileBackScreen :
+          current === "routeDetails" ? routeDetailsBackScreen : current) ||
+        "routes"
+      );
+    }
+    if (resolvedTarget === "notifications") {
+      setNotificationsBackScreen(payload.from || current || "dashboard");
+    }
+    if (resolvedTarget === "forgot") {
+      setForgotBackScreen(payload.from || (current === "forgot" ? forgotBackScreen : current) || "login");
+    }
+    if (resolvedTarget === "resetPassword") {
+      setResetPasswordBackScreen(
+        payload.from ||
+        (current === "resetPassword" ? resetPasswordBackScreen : current) ||
+        forgotBackScreen || "login"
+      );
+    }
+    if (resolvedTarget === "publicProfile") {
+      setPublicProfileBackScreen(
+        payload.from ||
+        (current === "publicProfile" ? publicProfileBackScreen : current) ||
+        "dashboard"
+      );
+    }
+    if (resolvedTarget === "activeShipmentDetails" || resolvedTarget === "editActiveShipment") {
+      setActiveShipmentBackScreen(
+        payload.from ||
+        (current === "activeShipmentDetails" || current === "editActiveShipment" ? activeShipmentBackScreen : current) ||
+        "activeShipments"
+      );
+    }
+    if (resolvedTarget === "activeRouteDetails" || resolvedTarget === "editActiveRoute") {
+      setActiveRouteBackScreen(
+        payload.from ||
+        (current === "activeRouteDetails" || current === "editActiveRoute" ? activeRouteBackScreen : current) ||
+        "activeRoutes"
+      );
+    }
+
+    const targetPath = getPathForScreen(resolvedTarget, {
+      shipmentId:       nextShipmentId,
+      subscriptionId:   nextSubscriptionId,
+      routeId:          nextRouteId,
+      activeShipmentId: nextActiveShipmentId,
+      activeRouteId:    nextActiveRouteId,
+      publicUserId:     nextPublicUserId,
+      resetToken:       nextResetToken,
+    });
+
+    if (payload.shipmentId      != null) setSelectedShipmentId(payload.shipmentId);
+    if (payload.subscriptionId  != null) setSelectedSubscriptionId(payload.subscriptionId);
+    if (payload.routeId         != null) setSelectedRouteId(payload.routeId);
+    if (payload.activeShipmentId != null) setSelectedActiveShipmentId(payload.activeShipmentId);
+    if (payload.activeRouteId   != null) setSelectedActiveRouteId(payload.activeRouteId);
+    if (payload.userId          != null) setSelectedPublicUserId(payload.userId);
+    if (payload.vehicle         != null) setSelectedEditVehicle(payload.vehicle);
+    if (resolvedTarget === "resetPassword") setResetToken(nextResetToken || "");
+
+    pendingPathRef.current = targetPath;
+    setDirection(dir);
+    setNext(resolvedTarget);
+    setPhase("exit");
+  };
+
+  useEffect(() => {
+    if (phase !== "idle") return;
+    if (pendingPathRef.current) return;
+
+    const routeState     = resolveScreenFromPath(location.pathname);
+    const roleFromStorage = getStoredRole();
+
+    if (routeState.redirectTo && location.pathname !== routeState.redirectTo) {
+      routerNavigate(routeState.redirectTo, { replace: true });
+      return;
+    }
+    if (adminOnlyScreens.has(routeState.screen) && !isAdminRole(userRole || roleFromStorage)) {
+      routerNavigate("/dashboard", { replace: true });
+      setCurrent("dashboard");
+      setNext(null);
+      setPhase("idle");
+      return;
+    }
+    if (routeState.screen === "resetPassword")        setResetToken(routeState.resetToken || "");
+    if (routeState.screen === "shipmentDetails")      setSelectedShipmentId(routeState.shipmentId ?? null);
+    if (routeState.screen === "subscriptionDetails")  setSelectedSubscriptionId(routeState.subscriptionId ?? null);
+    if (routeState.screen === "routeDetails")         setSelectedRouteId(routeState.routeId ?? null);
+    if (routeState.screen === "activeShipmentDetails" || routeState.screen === "editActiveShipment")
+      setSelectedActiveShipmentId(routeState.activeShipmentId ?? null);
+    if (routeState.screen === "activeRouteDetails" || routeState.screen === "editActiveRoute")
+      setSelectedActiveRouteId(routeState.activeRouteId ?? null);
+    if (routeState.screen === "publicProfile")
+      setSelectedPublicUserId(routeState.publicUserId ?? null);
+
+    if (routeState.screen !== current) {
+      setCurrent(routeState.screen);
+      setNext(null);
+      setPhase("idle");
+    }
+  }, [location.pathname, current, routerNavigate, userRole, phase]);
+
+  useEffect(() => {
+    if (phase === "exit") {
+      const t = setTimeout(() => { setCurrent(next); setPhase("enter"); }, 250);
+      return () => clearTimeout(t);
+    }
+    if (phase === "enter") {
+      const t = setTimeout(() => { setPhase("idle"); setNext(null); }, 250);
+      return () => clearTimeout(t);
+    }
+  }, [phase, next]);
+
+  useEffect(() => {
+    const pendingPath = pendingPathRef.current;
+    if (!pendingPath) return;
+    if (location.pathname !== pendingPath) {
+      routerNavigate(pendingPath);
+      return;
+    }
+    pendingPathRef.current = null;
+  }, [current, location.pathname, routerNavigate]);
+
+  // ── Load profile + capture userId ────────────────────────────────────────────
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadDisplayName = async () => {
+      const storedUser  = JSON.parse(localStorage.getItem("user") || "{}");
+      const fallback    = storedUser?.email ? String(storedUser.email).split("@")[0] : "User";
+      const fallbackRole = storedUser?.role || "USER";
+
+      if (!hasAuthToken()) {
+        if (isMounted) {
+          setDisplayName(fallback);
+          setUserRole(fallbackRole);
+          setCurrentUserId(getStoredUserId());
+          setAccountState({ loading: false, hasProfile: true, isVerified: true, isSuspended: false, type: "INDIVIDUAL" });
+        }
+        return;
+      }
+
+      try {
+        const profile = await getMyProfile();
+        if (!isMounted) return;
+
+        const resolvedName =
+          profile?.displayName ||
+          (profile?.email ? String(profile.email).split("@")[0] : "User");
+
+        setDisplayName(resolvedName);
+        setUserRole(profile?.role || fallbackRole);
+
+        // ── Capture userId from profile response ──────────────────────────────
+        // Adjust the field name to match your API response: id, _id, userId, etc.
+        const profileId = profile?.id || profile?._id || profile?.userId || getStoredUserId();
+        setCurrentUserId(profileId ?? null);
+
+        setAccountState({
+          loading:    false,
+          hasProfile: Boolean(profile?.hasProfile),
+          isVerified: Boolean(profile?.isVerified),
+          isSuspended: String(profile?.status || '').toUpperCase() === 'SUSPENDED',
+          type:       String(profile?.type || "INDIVIDUAL").toUpperCase(),
+        });
+      } catch {
+        if (isMounted) {
+          setDisplayName(fallback);
+          setUserRole(fallbackRole);
+          setCurrentUserId(getStoredUserId());
+          setAccountState((prev) => ({ ...prev, loading: false }));
+        }
+      }
+    };
+
+    loadDisplayName();
+    return () => { isMounted = false; };
+  }, [current]);
+
+  useEffect(() => {
+    if (phase !== "idle") return;
+    if (current !== "dashboard") return;
+    if (!hasAuthToken()) return;
+    if (accountState.loading) return;
+    if (accountState.hasProfile) return;
+
+    const oauthSetupFlow = sessionStorage.getItem("oauthSetupFlow") === "google";
+    if (oauthSetupFlow) { goTo("chooseType"); return; }
+    goTo(accountState.type === "BUSINESS" ? "business" : "individual");
+  }, [current, accountState.loading, accountState.hasProfile, accountState.type, phase]);
+
+  useEffect(() => {
+    if (accountState.loading) return;
+    if (accountState.hasProfile) sessionStorage.removeItem("oauthSetupFlow");
+  }, [accountState.loading, accountState.hasProfile]);
+
+  useEffect(() => {
+    if (!hasAuthToken() || publicScreens.has(current)) {
+      setHasUnreadNotifications(false);
+      return;
+    }
+    let isMounted = true;
+    const refresh = async () => {
+      try {
+        const list = await getNotifications();
+        if (!isMounted) return;
+        setHasUnreadNotifications(list.some((item) => item?.isRead === false));
+      } catch {
+        if (!isMounted) return;
+        setHasUnreadNotifications(false);
+      }
+    };
+    refresh();
+    const id = setInterval(refresh, 15000);
+    return () => { isMounted = false; clearInterval(id); };
+  }, [current]);
+
+  const goTo   = (to, payload) => navigate(to, "forward", payload);
+  const goBack = (to, payload) => navigate(to, "back",    payload);
+
+  const cls =
+    phase === "exit"  ? `exit-${direction}`  :
+    phase === "enter" ? `enter-${direction}` : "";
+
+  return (
+    <ThemeProvider>
+      <div className={`app-wrapper ${cls}`}>
+        <GlobalToaster />
+
+        {current === "landing" && (
+          <LandingPage
+            onGetStarted={() => goTo("create")}
+            onLogin={() => goTo("login")}
+          />
+        )}
+
+        {current === "login" && (
+          <Login
+            onBack={() => goBack("landing")}
+            onCreateAccount={() => goTo("create")}
+            onForgotPassword={() => goTo("forgot")}
+            onSuccess={async () => {
+              try {
+                const profile = await getMyProfile();
+                // Capture userId right after login
+                const profileId = profile?.id || profile?._id || profile?.userId || getStoredUserId();
+                setCurrentUserId(profileId ?? null);
+
+                const hasProfile = Boolean(profile?.hasProfile);
+                const isVerified = Boolean(profile?.isVerified);
+                const type       = String(profile?.type || "INDIVIDUAL").toUpperCase();
+                if (!hasProfile) { goTo(type === "BUSINESS" ? "business" : "individual"); return; }
+                if (!isVerified) { goTo("verification"); return; }
+              } catch { /* fall through */ }
+              goTo("dashboard");
+            }}
+          />
+        )}
+
+        {current === "forgot" && (
+          <ForgotPassword
+            onBack={() => goBack(forgotBackScreen || "login")}
+            onSuccess={() => goTo("login")}
+          />
+        )}
+
+        {current === "resetPassword" && (
+          <ResetPassword
+            token={resetToken}
+            onBack={() => { clearResetPath(); goBack(resetPasswordBackScreen || forgotBackScreen || "login"); }}
+            onSuccess={() => { clearResetPath(); goBack(resetPasswordBackScreen || forgotBackScreen || "login"); }}
+          />
+        )}
+
+        {current === "create" && (
+          <CreateAccountScreen
+            onBack={() => goBack("landing")}
+            onLogin={() => goTo("login")}
+            onNext={(selectedRole) => {
+              setRole(selectedRole);
+              goTo(selectedRole === "Individual" ? "individual" : "business");
+            }}
+          />
+        )}
+
+        {current === "chooseType" && (
+          <CreateAccountScreen
+            typeOnly
+            onBack={() => goBack("login")}
+            onLogin={() => goTo("login")}
+            onNext={(selectedRole) => {
+              setRole(selectedRole);
+              goTo(selectedRole === "Individual" ? "individual" : "business");
+            }}
+          />
+        )}
+
+        {current === "individual" && (
+          <IndividualRegScreen
+            onBack={() => goBack(sessionStorage.getItem("oauthSetupFlow") === "google" ? "chooseType" : "create")}
+            onLogin={() => goTo("login")}
+            onNext={() => {
+              if (sessionStorage.getItem("oauthSetupFlow") === "google") {
+                sessionStorage.removeItem("oauthSetupFlow");
+                goTo("dashboard");
+                return;
+              }
+              goTo("verification");
+            }}
+          />
+        )}
+
+        {current === "business" && (
+          <BusinessRegScreen
+            onBack={() => goBack(sessionStorage.getItem("oauthSetupFlow") === "google" ? "chooseType" : "create")}
+            onLogin={() => goTo("login")}
+            onNext={() => {
+              if (sessionStorage.getItem("oauthSetupFlow") === "google") {
+                sessionStorage.removeItem("oauthSetupFlow");
+                goTo("dashboard");
+                return;
+              }
+              goTo("verification");
+            }}
+          />
+        )}
+
+        {current === "verification" && (
+          <Verification
+            onBack={() => goBack(role === "Individual" ? "individual" : "business")}
+            onSuccess={async () => {
+              try {
+                const profile = await getMyProfile();
+                const hasProfile = Boolean(profile?.hasProfile);
+                const type       = String(profile?.type || "INDIVIDUAL").toUpperCase();
+                if (!hasProfile) { goTo(type === "BUSINESS" ? "business" : "individual"); return; }
+              } catch { /* fall through */ }
+              goTo("dashboard");
+            }}
+          />
+        )}
+
+        {current === "dashboard" && (
+          !hasAuthToken() ? (
+            <div className="app-auth-guard-screen">
+              <div className="app-auth-guard-card" role="alert" aria-live="polite">
+                <div className="app-auth-guard-icon" aria-hidden="true">X</div>
+                <p className="app-auth-guard-title">You are not registered, Please Register</p>
+                <button type="button" className="app-auth-guard-btn" onClick={() => goTo("login")}>Login</button>
+              </div>
+            </div>
+          ) : accountState.loading ? (
+            <div className="app-auth-guard-screen">
+              <div className="app-auth-guard-card" role="status" aria-live="polite">
+                <p className="app-auth-guard-title">Checking account setup...</p>
+              </div>
+            </div>
+          ) : accountState.isSuspended ? (
+            <div className="app-auth-guard-screen">
+              <div className="app-auth-guard-card" role="alert" aria-live="polite">
+                <div className="app-auth-guard-icon" aria-hidden="true" style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444' }}>!</div>
+                <p className="app-auth-guard-title">You're suspended. Contact admin to review your state.</p>
+                <button type="button" className="app-auth-guard-btn" onClick={() => goTo("login")}>Logout</button>
+              </div>
+            </div>
+          ) : (!accountState.hasProfile || !accountState.isVerified) ? (
+            <div className="app-auth-guard-screen">
+              <div className="app-auth-guard-card" role="alert" aria-live="polite">
+                <div className="app-auth-guard-icon" aria-hidden="true">X</div>
+                <p className="app-auth-guard-title">Complete account setup first (Profile and Email Verification).</p>
+                <button type="button" className="app-auth-guard-btn" onClick={() => {
+                  if (!accountState.hasProfile) { goTo(accountState.type === "BUSINESS" ? "business" : "individual"); return; }
+                  if (!accountState.isVerified)  goTo("verification");
+                }}>Continue Setup</button>
+              </div>
+            </div>
+          ) : (
+            <Dashboard
+              onNavigate={(screen) => goTo(screen)}
+              userName={displayName}
+              userRole={userRole}
+              currentUserId={currentUserId}          
+              hasUnreadNotifications={hasUnreadNotifications}
+            />
+          )
+        )}
+
+        {current === "shipments" && (
+          <Shipments
+            refreshKey={shipmentsRefreshKey}
+            hasUnreadNotifications={hasUnreadNotifications}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+            onBack={() => goBack("dashboard")}
+            userRole={userRole}
+          />
+        )}
+
+        {current === "activeShipments" && (
+          <ActiveShipmentsPage
+            onBack={() => goBack("dashboard")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "activeShipmentDetails" && (
+          <ActiveShipmentDetailsPage
+            shipmentId={selectedActiveShipmentId}
+            onBack={() => goBack(activeShipmentBackScreen || "activeShipments")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "editActiveShipment" && (
+          <EditActiveShipmentPage
+            shipmentId={selectedActiveShipmentId}
+            onBack={() => goBack(activeShipmentBackScreen || "activeShipmentDetails")}
+            onSaved={() => goTo("shipmentDetails", { shipmentId: selectedActiveShipmentId, from: "activeShipments" })}
+          />
+        )}
+
+        {current === "routes" && (
+          <RoutesScreen
+            hasUnreadNotifications={hasUnreadNotifications}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+            userRole={userRole}
+          />
+        )}
+
+        {current === "routeDetails" && (
+          <ActiveRouteDetailsPage
+            routeId={selectedRouteId}
+            source="all"
+            allowActions={false}
+            onBack={() => goBack("routes")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "activeRoutes" && (
+          <ActiveRoutesPage
+            onBack={() => goBack("dashboard")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "activeRouteDetails" && (
+          <ActiveRouteDetailsPage
+            routeId={selectedActiveRouteId}
+            onBack={() => goBack(activeRouteBackScreen || "activeRoutes")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "editActiveRoute" && (
+          <EditActiveRoutePage
+            routeId={selectedActiveRouteId}
+            onBack={() => goBack(activeRouteBackScreen || "activeRouteDetails")}
+            onSaved={() => goTo("routeDetails", { routeId: selectedActiveRouteId, from: "activeRoutes" })}
+          />
+        )}
+
+        {current === "profile" && (
+          <UserProvider>
+            <Profile
+              hasUnreadNotifications={hasUnreadNotifications}
+              onNavigate={(screen, payload) => goTo(screen, payload)}
+            />
+          </UserProvider>
+        )}
+
+        {current === "publicProfile" && (
+          <PublicProfilePage
+            userId={selectedPublicUserId}
+            onBack={() => goBack(publicProfileBackScreen || "dashboard")}
+          />
+        )}
+
+        {current === "editProfile" && (
+          <EditProfilePage onBack={() => goBack("profile")} />
+        )}
+
+        {current === "profileSettings" && (
+          <ProfileSettingsPage
+            onBack={() => goBack("profile")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "about" && (
+          <AboutUsPage onBack={() => goBack("profileSettings")} />
+        )}
+
+        {current === "activeDevices" && (
+          <ActiveDevicesPage onBack={() => goBack("profileSettings")} />
+        )}
+
+        {current === "vehicle" && (
+          <AddVehicle onBack={() => goBack("profile")} />
+        )}
+
+        {current === "editVehicle" && (
+          <AddVehicle
+            editVehicle={selectedEditVehicle}
+            onBack={() => goBack("profile")}
+            onAdded={() => goTo("profile")}
+          />
+        )}
+
+        {current === "createRoute" && <CreateRoute onNavigate={goTo} />}
+
+        {current === "shipmentDetails" && (
+          <ShipmentDetails
+            shipmentId={selectedShipmentId}
+            onBack={() => goBack("shipments")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "createShipment" && (
+          <CreateShipment
+            onBack={() => goBack("shipments")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+            hasUnreadNotifications={hasUnreadNotifications}
+            onCreated={(shipmentId) => {
+              if (shipmentId != null) {
+                setSelectedShipmentId(shipmentId);
+                setShipmentsRefreshKey((prev) => prev + 1);
+                goTo("shipmentDetails", { shipmentId });
+              }
+            }}
+          />
+        )}
+
+        {current === "subscription" && (
+          <UserProvider>
+            <SubscriptionPlans onNavigate={(screen, payload) => goTo(screen, payload)} />
+          </UserProvider>
+        )}
+
+        {current === "subscriptionDetails" && (
+          <SubscriptionDetailsPage
+            subId={selectedSubscriptionId}
+            isAdmin={subscriptionDetailsBackScreen === "adminSubscriptions"}
+            onBack={() => goBack(subscriptionDetailsBackScreen || "subscription")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "notifications" && (
+          <Notifications
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+            onBack={() => goBack(notificationsBackScreen || "dashboard")}
+            onNotificationsChanged={(hasUnread) => setHasUnreadNotifications(Boolean(hasUnread))}
+          />
+        )}
+
+        {/* ── Chat screen — currentUserId passed for fromUser/toUser logic ── */}
+        {current === "chat" && (
+          <Chat
+            currentUserId={currentUserId}
+            userName={displayName}
+            userRole={userRole}
+            userPhoto=""
+            hasUnreadNotifications={hasUnreadNotifications}
+            onBack={() => goBack("dashboard")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "adminPanel" && (
+          <AdminPanel
+            onBack={() => goBack("dashboard")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "usersList" && (
+          <UsersList
+            onBack={() => goBack("adminPanel")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+        {current === "adminSubscriptions" && (
+          <AdminSubscriptions
+            onBack={() => goBack("adminPanel")}
+            onNavigate={(screen, payload) => goTo(screen, payload)}
+          />
+        )}
+
+      </div>
+
+      {/* ── Suspended action banner ── */}
+      {suspendedBanner && (
+        <div className="suspended-overlay" role="alertdialog" aria-modal="true">
+          <div className="suspended-card">
+            <div className="suspended-icon">!</div>
+            <p className="suspended-msg">{suspendedBanner.message}</p>
+            <button className="suspended-close-btn" type="button" onClick={() => setSuspendedBanner(null)}>
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+    </ThemeProvider>
+  );
+}
+

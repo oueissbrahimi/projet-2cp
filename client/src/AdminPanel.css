@@ -1,0 +1,524 @@
+/* ============================================================
+   AdminPanel.css
+   
+   RESPONSIVE STRATEGY
+   -------------------
+   Two separate layout trees live in the DOM at the same time:
+     .ap-mobile-only   → rendered only on  < 768 px
+     .ap-desktop-only  → rendered only on ≥ 768 px
+
+   We use !important on the visibility rules so that no other
+   stylesheet (Dashboard.css, global resets, etc.) can override
+   them. Everything else is normal specificity.
+   ============================================================ */
+
+/* ── CSS variables ──────────────────────────────────────────── */
+:root {
+  --ap-bg:       #f4f6f8;
+  --ap-surface:  #ffffff;
+  --ap-border:   #e2e8f0;
+  --ap-text:     #0f172a;
+  --ap-muted:    #64748b;
+  --ap-primary:  var(--app-green-dark, #16a34a);
+  --ap-primary2: #15803d;
+}
+
+.dark-mode {
+  --ap-bg:      #0f172a;
+  --ap-surface: #1e293b;
+  --ap-border:  #334155;
+  --ap-text:    #f1f5f9;
+  --ap-muted:   #94a3b8;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   VISIBILITY HELPERS  —  the only place breakpoints matter
+   !important ensures nothing from Dashboard.css overrides these.
+══════════════════════════════════════════════════════════════ */
+
+/* Mobile block: shown by default, hidden on desktop */
+.ap-mobile-only {
+  display: block !important;
+}
+
+/* Desktop block: hidden by default, shown on desktop */
+.ap-desktop-only {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  .ap-mobile-only {
+    display: none !important;
+  }
+
+  .ap-desktop-only {
+    display: block !important; /* outer wrapper is block; inner ap-desktop-root uses flexbox */
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE SHELL
+══════════════════════════════════════════════════════════════ */
+
+.ap-mobile-root {
+  min-height: 100vh;
+  background: var(--ap-bg);
+  display: flex;
+  justify-content: center;
+}
+
+.ap-mobile-wrapper {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background: var(--ap-surface);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 20px 16px 32px;
+  box-sizing: border-box;
+}
+
+/* ── Mobile header ── */
+.ap-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ap-header > div {
+  flex: 1;
+}
+
+.ap-back-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--ap-border);
+  border-radius: 8px;
+  background: var(--ap-surface);
+  color: var(--ap-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DESKTOP SHELL
+   ap-desktop-root replicates db-desktop-layout's flex row.
+   The Sidebar component positions itself fixed on the left;
+   db-main fills the rest. db-content-inner is the scroll area.
+══════════════════════════════════════════════════════════════ */
+
+.ap-desktop-root {
+  /* Mirrors db-desktop-layout exactly */
+  display: flex;
+  width: 100vw;
+  min-height: 100vh;
+  background: var(--bg-primary, var(--ap-bg));
+  padding: 24px 24px 24px calc(var(--sb-sidebar-width, 280px) + 48px);
+  gap: 24px;
+  box-sizing: border-box;
+  align-items: flex-start;
+}
+
+/* Desktop page heading (replaces mobile ap-header) */
+.ap-desktop-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SHARED TYPOGRAPHY
+══════════════════════════════════════════════════════════════ */
+
+.ap-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ap-text);
+}
+
+.ap-subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--ap-muted);
+}
+
+@media (min-width: 768px) {
+  .ap-title    { font-size: 30px; }
+  .ap-subtitle { font-size: 14px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ERROR BANNER
+══════════════════════════════════════════════════════════════ */
+
+.ap-error-banner {
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.dark-mode .ap-error-banner {
+  background: #450a0a;
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STAT GRID
+══════════════════════════════════════════════════════════════ */
+
+.ap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2-col on mobile */
+  gap: 12px;
+  margin-top: 6px;
+}
+
+@media (min-width: 768px) {
+  .ap-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4-col on desktop */
+    gap: 16px;
+    margin-top: 10px;
+  }
+}
+
+.ap-stat-card {
+  border: 1px solid var(--ap-border);
+  border-radius: 16px;
+  background: var(--ap-surface);
+  padding: 16px 18px;
+  min-height: 100px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.ap-stat-card::after {
+  content: "";
+  position: absolute;
+  right: -22px;
+  top: -22px;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  background: #f0fdf4;
+}
+
+.dark-mode .ap-stat-card::after {
+  background: #14532d;
+}
+
+.ap-stat-label {
+  margin: 0;
+  font-size: 11px;
+  color: var(--ap-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+}
+
+.ap-stat-value {
+  margin: 8px 0 0;
+  font-size: 36px;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--ap-text);
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 768px) {
+  .ap-stat-card  { min-height: 116px; padding: 20px 20px 16px; }
+  .ap-stat-value { font-size: 46px; }
+}
+
+.ap-stat-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ap-stat-badge--green { background: #dcfce7; color: var(--app-green, #16a34a); }
+.ap-stat-badge--gray  { background: #eef2f7; color: #64748b; }
+
+.dark-mode .ap-stat-badge--green { background: #14532d; color: #dcfce7; }
+.dark-mode .ap-stat-badge--gray  { background: #334155; color: #94a3b8; }
+
+.ap-stat-badge-icon { display: inline-flex; }
+
+.ap-spin { animation: ap-spin 2s linear infinite; }
+@keyframes ap-spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════════════════════════════
+   SKELETON
+══════════════════════════════════════════════════════════════ */
+
+.ap-skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f0fdf4 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: ap-shimmer 1.4s infinite;
+  min-height: 100px;
+  border-radius: 16px;
+}
+
+@keyframes ap-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TWO-COLUMN SECTIONS (Export + Quick Actions)
+══════════════════════════════════════════════════════════════ */
+
+.ap-two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+@media (min-width: 768px) {
+  .ap-two-col {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SECTION CARD
+══════════════════════════════════════════════════════════════ */
+
+.ap-section {
+  border: 1px solid var(--ap-border);
+  border-radius: 16px;
+  background: var(--ap-surface);
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .ap-section { padding: 20px; }
+}
+
+.ap-section-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ap-text);
+}
+
+@media (min-width: 768px) {
+  .ap-section-title { font-size: 17px; margin-bottom: 14px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EXPORT
+══════════════════════════════════════════════════════════════ */
+
+.ap-export-desc {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--ap-muted);
+  line-height: 1.5;
+}
+
+.ap-export-error {
+  margin: 0 0 8px;
+  color: #be123c;
+  font-size: 12px;
+}
+
+.ap-export-list {
+  border: 1px solid var(--ap-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ap-export-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid var(--ap-border);
+}
+
+.ap-export-row:last-child { border-bottom: none; }
+
+@media (min-width: 768px) {
+  .ap-export-row { padding: 14px 16px; }
+}
+
+.ap-export-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ap-export-left h3 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ap-text);
+}
+
+.ap-export-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #dcfce7;
+  color: var(--app-green, #16a34a);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ap-export-btn {
+  border: none;
+  border-radius: 6px;
+  background: var(--app-green, #16a34a);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 10px;
+  min-width: 80px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ap-export-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* ══════════════════════════════════════════════════════════════
+   QUICK ACTIONS
+══════════════════════════════════════════════════════════════ */
+
+.ap-highlight-list { display: grid; gap: 10px; }
+
+.ap-highlight-card {
+  border: 1px solid var(--ap-border);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .ap-highlight-card {
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+    padding: 14px;
+  }
+}
+
+.ap-highlight-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #dcfce7;
+  color: #15803d;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .ap-highlight-icon { width: 38px; height: 38px; }
+}
+
+.ap-highlight-content h3 { margin: 0; font-size: 14px; color: var(--ap-text); }
+.ap-highlight-content p  { margin: 4px 0 0; font-size: 12px; color: var(--ap-muted); }
+
+/* ── Buttons ── */
+.ap-btn {
+  border: none;
+  border-radius: 8px;
+  background: var(--ap-primary);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 9px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  /* On mobile, span full width of its grid column */
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 768px) {
+  .ap-btn {
+    grid-column: auto; /* inline on desktop */
+    padding: 10px 18px;
+  }
+}
+
+.ap-btn:hover     { background: var(--ap-primary2); }
+.ap-btn--retry    { background: #be123c; }
+.ap-btn--retry:hover { background: #9f1239; }
+
+/* ══════════════════════════════════════════════════════════════
+   SYSTEM STATUS
+══════════════════════════════════════════════════════════════ */
+
+.ap-section--status { margin-top: 14px; }
+
+@media (min-width: 768px) {
+  .ap-section--status { margin-top: 20px; }
+}
+
+.ap-health-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 768px) {
+  .ap-health-row { grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+
+.ap-health-item {
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+@media (min-width: 768px) {
+  .ap-health-item { padding: 14px 18px; }
+}
+
+.ap-health-item--ok      { color: #166534; background: #f0fdf4; border-color: #bbf7d0; }
+.ap-health-item--down    { color: #b91c1c; background: #fef2f2; border-color: #fecaca; }
+.ap-health-item--warning { color: #9a3412; background: #fff7ed; border-color: #fdba74; }
+
+.dark-mode .ap-health-item--ok      { color: #dcfce7; background: #14532d; border-color: #166534; }
+.dark-mode .ap-health-item--down    { color: #fca5a5; background: #450a0a; border-color: #7f1d1d; }
+.dark-mode .ap-health-item--warning { color: #fdba74; background: #451a03; border-color: #9a3412; }

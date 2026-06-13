@@ -1,0 +1,82 @@
+.fleet-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fleet-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fleet-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+}
+
+.fleet-badge {
+  background: var(--bg-primary, #f4f6f8);
+  border: 1px solid var(--border-color, #e2e8f0);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm, 4px);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--text-secondary, #64748b);
+}
+
+.fleet-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  padding: 16px 0;
+}
+
+.fleet-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-secondary, #64748b);
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #111827);
+}
+
+.fleet-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--logo-box-bg, #e5e7eb);
+  border-radius: var(--radius-sm, 4px);
+  overflow: hidden;
+}
+
+.fleet-progress-fill {
+  height: 100%;
+  transition: width 0.5s ease-out; /* Proper non-bounce easing */
+}
+
+.fleet-widget-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fleet-note {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #64748b);
+}

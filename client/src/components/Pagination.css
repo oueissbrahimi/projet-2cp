@@ -1,0 +1,77 @@
+/* Pagination.css - responsive pagination */
+
+.pg-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 24px;
+  padding: 12px 0;
+  flex-wrap: wrap;
+}
+
+.pg-page-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.pg-page-btn:hover:not(:disabled):not(.pg-page-btn--active) {
+  border-color: #10b981;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.06);
+}
+
+.pg-page-btn--active {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.pg-page-btn--nav {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+}
+
+.pg-page-btn--nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pg-dots {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 640px) {
+  .pg-pagination {
+    gap: 4px;
+    padding: 10px 0 6px;
+  }
+
+  .pg-page-btn,
+  .pg-dots {
+    width: 34px;
+    height: 34px;
+    font-size: 13px;
+  }
+}

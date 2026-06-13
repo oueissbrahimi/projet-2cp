@@ -1,0 +1,19 @@
+.ui-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: none; /* Flat by default */
+  overflow: hidden;
+}
+
+/* Variants */
+.ui-card--container {
+  padding: 24px;
+}
+
+.ui-card--stat {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

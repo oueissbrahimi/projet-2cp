@@ -1,0 +1,146 @@
+import { useEffect, useState } from "react";
+import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
+import ConfirmDialog from "./ConfirmDialog";
+import { deleteShipment, getShipments } from "./services/shipmentService";
+import { toastError, toastSuccess } from "./services/toastService";
+import { formatTons } from "./utils/weight";
+import "./ActiveManage.css";
+
+const formatDateOnly = (value) => {
+  if (!value) return "";
+  const text = String(value);
+  const [datePart] = text.split("T");
+  return datePart || text;
+};
+
+const formatShipmentStatus = (value) => {
+  const normalized = String(value || "").toUpperCase().trim();
+  switch (normalized) {
+    case "PENDING": return "Pending";
+    case "MATCHED": return "Matched";
+    case "PICKED_UP": return "Picked Up";
+    case "IN_TRANSIT": return "In Transit";
+    case "DELIVERED": return "Delivered";
+    case "CANCELLED": return "Cancelled";
+    default: return normalized ? normalized.replace(/_/g, " ") : "Unknown";
+  }
+};
+
+const toStatusKey = (value) => String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+const STATUS_COLORS = {
+  pending: "#f59e0b",
+  matched: "#0e7490",
+  picked_up: "#92400e",
+  in_transit: "#1d4ed8",
+  delivered: "var(--app-green)",
+  cancelled: "#ef4444",
+  failed: "#ef4444",
+};
+const getStatusColor = (status) => STATUS_COLORS[toStatusKey(status)] || "var(--app-green)";
+
+export default function ActiveShipmentDetailsPage({ shipmentId, onBack, onNavigate }) {
+  const [item, setItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    if (!error) return;
+    toastError(error);
+  }, [error]);
+
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const list = await getShipments({}, null, true);
+        const found = list.find((it) => String(it?.shipment_ID || it?.id) === String(shipmentId));
+        setItem(found || null);
+        if (!found) setError("Shipment not found.");
+      } catch (err) {
+        setError(err?.message || "Failed to load shipment details.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (shipmentId != null) load();
+  }, [shipmentId]);
+
+  const handleDelete = async () => {
+    if (!item) return;
+    setDeleting(true);
+    try {
+      await deleteShipment(item.shipment_ID || item.id);
+      toastSuccess("Shipment deleted");
+      onNavigate?.("activeShipments");
+    } catch (err) {
+      setError(err?.message || "Failed to delete shipment.");
+    } finally {
+      setDeleting(false);
+      setConfirmDeleteOpen(false);
+    }
+  };
+
+  return (
+    <div className="am-page">
+      <div className="am-card">
+        <header className="am-header">
+          <button className="am-back" onClick={onBack} type="button">
+            <ArrowLeft size={18} />
+          </button>
+          <div className="am-headtext">
+            <h1>Shipment Details</h1>
+            <p>Review and manage this shipment.</p>
+          </div>
+          <ThemeToggle />
+        </header>
+
+        <div className="am-body">
+          {loading ? <div className="am-state">Loading...</div> : null}
+          {!loading && error ? <div className="am-state">{error}</div> : null}
+          {!loading && item ? (
+            <>
+              <div className="am-detail">
+                <div className="am-detail-item"><b>ID</b><span>{item.shipment_ID || item.id}</span></div>
+                <div className="am-detail-item"><b>Status</b><span style={{ color: getStatusColor(item.status), fontWeight: 700 }}>{formatShipmentStatus(item.status)}</span></div>
+                <div className="am-detail-item"><b>Title</b><span>{item.title || "N/A"}</span></div>
+                <div className="am-detail-item"><b>Category</b><span>{item.category || "N/A"}</span></div>
+                <div className="am-detail-item"><b>Origin</b><span>{item.origin || "N/A"}</span></div>
+                <div className="am-detail-item"><b>Destination</b><span>{item.destination || "N/A"}</span></div>
+                <div className="am-detail-item"><b>Weight (t)</b><span>{item.weight != null ? formatTons(item.weight) : "N/A"}</span></div>
+                <div className="am-detail-item"><b>Volume</b><span>{item.volume ?? "N/A"}</span></div>
+                <div className="am-detail-item"><b>Date</b><span>{item.date ? formatDateOnly(item.date) : "N/A"}</span></div>
+                <div className="am-detail-item"><b>Time</b><span>{item.time || "N/A"}</span></div>
+              </div>
+
+              <div className="am-actions">
+                <button className="am-btn am-btn-edit" type="button" onClick={() => onNavigate("editActiveShipment", { activeShipmentId: item.shipment_ID || item.id, from: "activeShipmentDetails" })}>
+                  <Pencil size={13} /> Update
+                </button>
+                <button className="am-btn am-btn-delete" type="button" onClick={() => setConfirmDeleteOpen(true)}>
+                  <Trash2 size={13} /> Delete
+                </button>
+              </div>
+            </>
+          ) : null}
+        </div>
+      </div>
+
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        title="Delete Shipment"
+        message={item ? `Delete shipment #${item.shipment_ID || item.id}?` : ""}
+        confirmLabel="Yes"
+        cancelLabel="No"
+        loading={deleting}
+        onCancel={() => setConfirmDeleteOpen(false)}
+        onConfirm={handleDelete}
+      />
+    </div>
+  );
+}

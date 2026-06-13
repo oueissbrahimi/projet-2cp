@@ -1,0 +1,40 @@
+/* ================================================================
+   AdminLayout — desktop sidebar offset.
+   Sidebar is position:fixed; left:24px.
+   Widths from Sidebar.css: 220px (1024-1200), 260px (1200-1600), 290px (1600+)
+   padding-left = 24(left offset) + sidebar-width + 32(gap)
+================================================================ */
+
+.admin-layout {
+  display: contents;
+}
+
+.admin-layout__content {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 1024–1199px → sidebar 220px → 24+220+32 = 276px */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .admin-layout { display: block; }
+  .admin-layout__content {
+    padding: 20px 20px 48px 276px;
+  }
+}
+
+/* 1200–1599px → sidebar 260px → 24+260+32 = 316px */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .admin-layout { display: block; }
+  .admin-layout__content {
+    padding: 24px 24px 48px 316px;
+  }
+}
+
+/* 1600px+ → sidebar 290px → 24+290+32 = 346px */
+@media (min-width: 1600px) {
+  .admin-layout { display: block; }
+  .admin-layout__content {
+    padding: 24px 32px 48px 346px;
+  }
+}

@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserType {
+  BUSINESS
+  INDIVIDUAL
+}
+
+enum Roles {
+  USER
+  ADMIN
+}
+
+enum PostType {
+  ORIGIN_DESTINATION
+  REGION
+}
+
+enum DateType {
+  DAY
+  INTERVAL
+}
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+enum ShipmentStatus {
+  PENDING
+  MATCHED
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+enum RouteStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum SubscriptionTier {
+  INDIVIDUAL
+  BUSINESS
+  FREE
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique @db.VarChar(50)
+  password      String?
+  phone         String   @db.VarChar(10)
+  profile_Photo String?
+  working_Time  String?
+  type          UserType
+  role          Roles
+  status        UserStatus
+  createdAt     DateTime @default(now())
+
+  resetPasswordToken String?
+  resetPasswordExpires DateTime?
+  verificationToken String? @db.VarChar(10)
+  verificationTokenExpires DateTime?
+  isVerified Boolean @default(false)
+
+  individual    Individual?
+  business      Business?
+  subscription  Subscription?
+  notifSettings NotificationSettings?
+
+  vehicles       Vehicle[]
+  shipments      Shipment[]
+  routes         Route[]
+  notifications  Notification[]
+
+  sentMessages      Message[]     @relation("SentMessages")
+  receivedMessages  Message[]     @relation("ReceivedMessages")
+
+  userContacts  Contact[]  @relation("UserContacts")
+  contactsOf    Contact[]  @relation("ContactOf")
+
+  subscriptionRequests SubscriptionRequest[]
+  
+}
+
+model Individual {
+  user_ID   Int    @id
+  user      User   @relation(fields: [user_ID], references: [id])
+
+  full_Name String
+  nin       String @unique @db.VarChar(18)
+  location  String
+}
+
+model Business {
+  user_ID       Int      @id
+  user          User     @relation(fields: [user_ID], references: [id])
+
+  business_Name String
+  rc_Number     String   @unique @db.VarChar(12)
+  form          String
+  nif           String   @db.VarChar(15)
+  nis           String   @db.VarChar(15)
+  locations     String[]
+  
+}
+
+model Vehicle {
+  plate_Number  String  @id @db.VarChar(12)
+  vehicle_Name  String  
+  type          String?
+  color         String?
+  year          Int?
+  capacity      Float
+  photo         String
+  deleted_at    DateTime?
+  status        String @default("AVAILABLE")
+  user_ID       Int
+  user          User    @relation(fields: [user_ID], references: [id])
+
+  routes        Route[]
+
+  @@index([user_ID])
+}
+
+model Route {
+  route_ID          Int     @id @unique @default(autoincrement())
+  name              String?
+  photo             String? @db.Text
+  origin            String? 
+  destination       String? 
+  waypoints         String[] @default([])
+  region            String?
+  date              DateTime? 
+  post_type         PostType @default(ORIGIN_DESTINATION)
+  date_type         DateType @default(DAY)
+  interval_start    DateTime?
+  interval_end      DateTime?
+  more_Information  String?  @db.Text
+  status            RouteStatus  @default(SCHEDULED)
+  createdAt         DateTime @default(now())
+
+  
+  user_ID           Int
+  user              User    @relation(fields: [user_ID], references: [id])
+  
+
+  vehicle_plate     String  @db.VarChar(12)
+  vehicle           Vehicle    @relation(fields: [vehicle_plate], references: [plate_Number])
+
+  @@index([user_ID])
+  @@index([vehicle_plate])
+}
+
+
+model Shipment {
+  shipment_ID         Int     @id @default(autoincrement())
+  title               String?
+  product_Type        String?
+  possible_Veh        String?
+  photo               String? @db.Text
+  origin              String  
+  destination         String  
+  volume              Float
+  weight              Float 
+  quantity            Int                   
+  price               Float   @default(0)
+  date                DateTime
+  time                String? @db.VarChar(5)
+  priority            String  @default("Normal")
+  special_Information String? @db.Text
+  status              ShipmentStatus  @default(PENDING)
+  createdAt           DateTime @default(now())
+
+  user_ID             Int
+  user                User    @relation(fields: [user_ID], references: [id])
+
+  @@index([user_ID])
+}
+
+model Subscription {
+  sub_ID     Int       @id @default(autoincrement())
+  tier       SubscriptionTier     
+  startDate  DateTime? @default(now())
+  endDate    DateTime? @default(dbgenerated("(CURRENT_TIMESTAMP + interval '1 month')"))
+  isActive   Boolean   @default(true)
+
+  shipmentsThisMonth Int @default(0)
+  routesThisMonth    Int @default(0)
+
+  contactsCount      Int @default(0)
+
+  user_ID   Int        @unique
+  user      User       @relation(fields: [user_ID], references: [id])
+
+}
+
+model SubscriptionRequest {
+  request_ID  Int       @id @default(autoincrement())
+  user_ID     Int
+  user        User      @relation(fields: [user_ID], references: [id])
+  tier        SubscriptionTier
+  status      String    @default("PENDING")
+  attachment  String?
+  createdAt   DateTime  @default(now())
+  reviewedAt  DateTime?
+
+  @@index([user_ID])
+  @@index([status])
+}
+
+model Notification {
+  notif_ID   Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  title      String
+  message    String
+  type       String 
+  isRead     Boolean  @default(false)
+  entityType String
+  entityID   Int
+
+  user_ID    Int
+  user       User     @relation(fields: [user_ID], references: [id])
+
+  @@index([user_ID])
+}
+
+model NotificationSettings {
+  id               Int     @id @default(autoincrement())
+  emailEnabled     Boolean @default(true)
+  pushEnabled      Boolean @default(true)
+  shipmentUpdates  Boolean @default(true)
+  routeUpdates     Boolean @default(true)
+  Reminders        Boolean @default(true)
+
+  user_ID          Int    @unique
+  user             User   @relation(fields: [user_ID], references: [id])
+}
+
+model Message {
+
+  id              Int @id @default(autoincrement())
+  fromUser        Int
+  from            User @relation("SentMessages", fields: [fromUser], references: [id])
+  toUser          Int
+  to              User @relation("ReceivedMessages", fields: [toUser], references: [id])
+  msg             String?
+  image           String?
+  createdAt       DateTime @default(now())
+  deletedAt       DateTime?
+
+  @@index([fromUser])
+  @@index([toUser])
+}
+
+model Contact{
+  id              Int @id @default(autoincrement())
+  user            Int
+  userRel         User @relation("UserContacts", fields: [user], references: [id])
+  contactOf       Int
+  contactRel      User @relation("ContactOf", fields: [contactOf], references: [id])
+  createdAt       DateTime @default(now())
+  deletedAt       DateTime?
+
+  @@unique([user, contactOf])
+  @@index([user])
+  @@index([contactOf])
+}
+

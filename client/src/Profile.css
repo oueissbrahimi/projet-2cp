@@ -1,0 +1,1577 @@
+.profile-root {
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease;
+}
+
+.profile-subpage-shell {
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  display: flex;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  padding: 0 16px;
+}
+
+.profile-subpage-shell-inner {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-lg);
+  padding-bottom: 40px;
+}
+
+.profile-subpage-desktop {
+  width: 100%;
+}
+
+.profile-subpage-content {
+  width: 100%;
+}
+
+/* All history subpage */
+.all-history-card {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  margin: 12px 16px 0;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.all-history-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+.all-history-empty {
+  padding: 18px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.all-history-row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.all-history-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.all-history-meta {
+  font-size: 12px;
+  margin-top: 2px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.all-history-row-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.all-trucks-card {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  margin: 12px 16px 0;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.alltrucks-row-interactive,
+.subpage-row-interactive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.alltrucks-row-interactive:hover,
+.subpage-row-interactive:hover {
+  background: var(--bg-primary);
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 430px;
+  padding-bottom: 96px;
+  border-bottom-left-radius: 26px;
+  border-bottom-right-radius: 26px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.spacer { height: 10px; }
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 14px;
+  background: var(--bg-secondary);
+}
+
+.header-title {
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  color: var(--text-primary);
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.dark-toggle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--button-secondary-bg);
+  color: var(--text-primary);
+}
+
+.bell-wrapper { position: relative; }
+
+.bell-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  border: 2px solid var(--bg-secondary);
+}
+
+.profile-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 30px;
+  gap: 10px;
+  background: var(--bg-secondary);
+}
+
+.avatar-wrapper { position: relative; margin-top: 10px; }
+
+.avatar-ring { width: 100px; height: 100px; border-radius: 50%; padding: 3px; }
+.avatar-ring.verified { border: 3px solid #10b981; }
+.avatar-ring.unverified { border: 3px solid #ef4444; }
+
+.avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+.avatar-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  border-radius: 50%;
+  padding: 1px;
+  background: var(--bg-secondary);
+}
+
+.verified-pill {
+  border-radius: 20px;
+  padding: 3px 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.verified-pill.verified { background: #e8faf2; }
+.verified-pill.unverified { background: #fff0f0; }
+
+.verified-pill-text { font-size: 12px; font-weight: 600; }
+.verified-pill-text.verified { color: #10b981; }
+.verified-pill-text.unverified { color: #ef4444; }
+
+.profile-name { margin: 0; font-size: 22px; font-weight: 700; color: var(--text-primary); }
+
+.profile-location { display: flex; align-items: center; gap: 4px; }
+.profile-location-text { font-size: 14px; color: var(--text-secondary); }
+
+.rating-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e8faf2;
+  border-radius: 20px;
+  padding: 5px 14px;
+}
+.rating-text { color: #10b981; font-weight: 700; font-size: 14px; }
+.rating-count { font-size: 13px; color: var(--text-secondary); }
+
+.edit-btn {
+  margin-top: 8px;
+  background: var(--text-primary);
+  color: var(--bg-secondary);
+  border: none;
+  border-radius: 28px;
+  padding: 13px 36px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 1px;
+}
+
+.profile-card {
+  border-radius: 16px;
+  margin: 0 16px;
+  padding: 20px;
+  background: var(--bg-secondary);
+}
+
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.section-title { font-weight: 700; font-size: 16px; color: var(--text-primary); }
+.view-all-btn {
+  background: none;
+  border: none;
+  color: #10b981;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.contact-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.contact-icon-box {
+  width: 28px; height: 28px;
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.contact-title { font-weight: 700; font-size: 15px; color: var(--text-primary); }
+
+.contact-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-color);
+}
+.contact-row-left { display: flex; align-items: center; gap: 12px; }
+.contact-icon-circle {
+  width: 34px; height: 34px;
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+}
+.contact-value { font-size: 14px; color: var(--text-primary); }
+
+.history-row,
+.truck-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-color);
+}
+.history-info,
+.truck-info { display: flex; align-items: center; gap: 12px; }
+
+.history-title,
+.truck-name { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+
+.history-meta,
+.truck-capacity { font-size: 12px; margin-top: 2px; color: var(--text-secondary); }
+
+.truck-right { display: flex; align-items: center; gap: 6px; }
+
+.status-badge {
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 4px 11px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row-left { display: flex; align-items: center; gap: 14px; }
+.settings-label { font-size: 15px; font-weight: 500; color: var(--text-primary); }
+.settings-label.red { color: #ef4444; }
+
+.sh-bottom-nav {
+  display: flex; align-items: center; justify-content: space-around;
+  padding: 12px 0 20px; border-top: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  position: fixed; bottom: 0; left: 50%;
+  width: 100%; max-width: 430px;
+  transform: translateX(-50%);
+  z-index: 20;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+}
+
+.sh-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: none; cursor: pointer; padding: 4px 12px;
+  font-family: 'DM Sans', sans-serif;
+  border-radius: 14px;
+  color: var(--text-secondary);
+  transition: background-color 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+.sh-nav-item span { font-size: 10px; font-weight: 600; color: var(--text-secondary); letter-spacing: 0.04em; }
+.sh-nav-item--active { color: #10b981; }
+.sh-nav-item--active span { color: #10b981; }
+
+/* desktop */
+.profile-desktop-wrap { display: none; }
+.profile-mobile-wrap { display: block; }
+
+@media (min-width: 1024px) {
+  .profile-subpage-shell {
+    padding: 0;
+  }
+
+  .profile-subpage-shell-inner {
+    max-width: none;
+    border-radius: 0;
+  }
+
+  .profile-subpage-content {
+    padding: 24px 24px 32px calc(var(--sb-sidebar-width, 280px) + 48px);
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+
+  .all-history-card {
+    max-width: none;
+    margin: 18px 24px 0;
+    border-radius: 18px;
+  }
+
+  .all-history-row {
+    padding: 16px 22px;
+  }
+
+  .all-history-row-left {
+    gap: 14px;
+  }
+
+  .all-history-title {
+    font-size: 15px;
+  }
+
+  .all-history-meta {
+    font-size: 13px;
+  }
+
+  .all-history-row-right {
+    gap: 8px;
+  }
+
+  .all-trucks-card {
+    margin: 18px 24px 0 !important;
+    border-radius: 18px !important;
+  }
+
+  .alltrucks-row-interactive {
+    padding: 18px 22px;
+  }
+
+  .profile-container {
+    max-width: none;
+    width: 100%;
+    padding: 24px 24px 32px calc(var(--sb-sidebar-width, 280px) + 48px);
+    box-sizing: border-box;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .profile-mobile-wrap { display: none; }
+  .profile-desktop-wrap {
+    display: block;
+  }
+
+  .profile-desktop-main {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    padding: 16px;
+  }
+
+  .profile-desktop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .profile-desktop-brand { font-weight: 700; font-size: 18px; color: var(--text-primary); }
+  .profile-desktop-actions { display: flex; align-items: center; gap: 8px; }
+
+  .profile-desktop-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .profile-desktop-hero-left { display: flex; align-items: center; gap: 12px; }
+  .profile-desktop-hero-left .avatar-ring { width: 64px; height: 64px; padding: 2px; }
+
+  .profile-desktop-title {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+
+  .profile-desktop-sub,
+  .profile-desktop-rating {
+    margin: 6px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .profile-desktop-edit {
+    border: none;
+    background: #1f5133;
+    color: #fff;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .profile-desktop-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 14px;
+  }
+
+  .profile-desktop-card {
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 14px;
+    color: var(--text-primary);
+  }
+
+  .profile-desktop-history {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+  }
+
+  .profile-desktop-trucks {
+    background: #1f5133;
+    color: #e6f4ec;
+  }
+
+  .profile-desktop-add-vehicle {
+    background: #1f5133;
+    color: #e6f4ec;
+  }
+
+  .profile-desktop-trucks .profile-desktop-card-title,
+  .profile-desktop-add-vehicle .profile-desktop-card-title,
+  .profile-desktop-trucks .profile-desktop-truck-row,
+  .profile-desktop-add-vehicle .profile-desktop-kpi-text {
+    color: #e6f4ec;
+  }
+
+  .profile-desktop-trucks .profile-desktop-truck-row {
+    border-top-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .profile-desktop-add-btn {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #10b981;
+    color: #fff;
+  }
+
+  .profile-desktop-kpi {
+    grid-column: 2 / 3;
+    background: #e9edf9;
+    border-color: #d8deef;
+  }
+
+  .dark-mode .profile-desktop-kpi {
+    background: #141d2f;
+    border-color: #24324a;
+  }
+
+  .profile-desktop-card-title {
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    color: var(--text-primary);
+  }
+
+  .profile-desktop-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border-color);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  /* Force green on contact icons (overrides generic svg rule) */
+  .profile-desktop-contact-item svg {
+    color: #10b981 !important;
+    flex-shrink: 0;
+  }
+
+  .profile-desktop-contact-item svg,
+  .profile-desktop-table-head svg,
+  .profile-desktop-table-row svg {
+    color: var(--text-secondary);
+  }
+
+  .profile-desktop-table-head,
+  .profile-desktop-table-row {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr .8fr;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .profile-desktop-table-head {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    padding-bottom: 8px;
+  }
+
+  .profile-desktop-table-row {
+    border-top: 1px solid var(--border-color);
+    padding: 10px 0;
+    font-size: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .profile-desktop-view-all {
+    margin-top: 8px;
+    border: none;
+    background: none;
+    color: #1f5133;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .dark-mode .profile-desktop-view-all { color: #86efac; }
+
+  .profile-desktop-truck-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 0;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .profile-desktop-kpi-text {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .profile-desktop-kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .profile-desktop-kpi-grid > div {
+    background: #fff;
+    border: 1px solid #d8deef;
+    border-radius: 8px;
+    padding: 8px;
+    display: grid;
+    gap: 2px;
+    color: var(--text-primary);
+  }
+
+  .dark-mode .profile-desktop-kpi-grid > div {
+    background: #0f182b;
+    border-color: #24324a;
+  }
+
+  .profile-desktop-kpi-grid strong {
+    font-size: 20px;
+    color: #1f5133;
+  }
+
+  .dark-mode .profile-desktop-kpi-grid strong { color: #86efac; }
+
+  .profile-desktop-kpi-grid span {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+  }
+
+  /* ── Card background: light green instead of grey ── */
+  .profile-desktop-card {
+    background: #E3EFE5;
+    border-color: #c5dbc8;
+  }
+  .dark-mode .profile-desktop-card {
+    background: var(--bg-primary);
+    border-color: var(--border-color);
+  }
+  /* Keep dark green cards as-is */
+  .profile-desktop-trucks,
+  .profile-desktop-add-vehicle {
+    background: #1f5133;
+    border-color: #1f5133;
+  }
+  /* KPI: same light green in light mode */
+  .profile-desktop-kpi {
+    background: #E3EFE5;
+    border-color: #c5dbc8;
+  }
+  .dark-mode .profile-desktop-kpi {
+    background: #141d2f;
+    border-color: #24324a;
+  }
+
+  /* ── Desktop header: logo box — matches Header component style ── */
+  .profile-desktop-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .profile-desktop-logo-box {
+    width: 52px;
+    height: 52px;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .profile-desktop-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  /* ── Desktop bell button ── */
+  .profile-desktop-bell-btn {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: var(--button-secondary-bg);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease-out;
+  }
+  .profile-desktop-bell-btn:hover {
+    background: var(--button-secondary-hover);
+    animation: bellShake 0.6s ease-out;
+  }
+  .profile-desktop-bell-btn:active { transform: scale(0.92); }
+  .profile-desktop-notif-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 2px solid var(--bg-secondary);
+  }
+
+  /* ── Card header row (title + View All) ── */
+  .profile-desktop-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .profile-desktop-card-header .profile-desktop-card-title { margin: 0; }
+
+  /* ── History table: 6 columns (Type | ID | Details | Origin | Destination | Status) ── */
+  .profile-desktop-table-head,
+  .profile-desktop-table-row {
+    grid-template-columns: 0.55fr 0.65fr 1.5fr 0.9fr 0.9fr 1fr;
+  }
+
+  /* ── Type badge (Route / Ship) ── */
+  .profile-desktop-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+    width: fit-content;
+  }
+  .route-type  { background: #fff3e0; color: #d97706; }
+  .ship-type   { background: #eff6ff; color: #1d4ed8; }
+
+  .profile-desktop-id-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .profile-desktop-title-cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── View All: light variant for dark cards ── */
+  .profile-desktop-view-all--light {
+    color: #86efac !important;
+  }
+
+  /* ── Truck thumbnail in desktop row ── */
+  .profile-desktop-truck-thumb {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  /* ── Eye button on each truck row ── */
+  .profile-desktop-eye-btn {
+    background: rgba(255,255,255,0.14);
+    border: none;
+    color: #e6f4ec;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+  .profile-desktop-eye-btn:hover { background: rgba(255,255,255,0.28); }
+
+}/* ── Interactive Enhancements ─────────────────────────────────────── */
+
+/* Entry animation */
+@keyframes profileFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes profileSlideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bellShake {
+  0%, 100% { transform: rotate(0deg); }
+  15%  { transform: rotate(14deg); }
+  30%  { transform: rotate(-12deg); }
+  45%  { transform: rotate(8deg); }
+  60%  { transform: rotate(-6deg); }
+  75%  { transform: rotate(3deg); }
+}
+
+@keyframes ringPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  70%  { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@keyframes menuScaleIn {
+  from { opacity: 0; transform: scale(0.9) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes badgePop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.profile-page-enter {
+  animation: profileFadeIn 0.4s ease-out both;
+}
+
+.profile-card-enter {
+  animation: profileFadeIn 0.35s ease-out both;
+}
+.profile-card-enter:nth-child(2) { animation-delay: 0.06s; }
+.profile-card-enter:nth-child(3) { animation-delay: 0.12s; }
+.profile-card-enter:nth-child(4) { animation-delay: 0.18s; }
+.profile-card-enter:nth-child(5) { animation-delay: 0.24s; }
+
+/* Avatar hover */
+.profile-avatar-btn {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.25s ease-out;
+}
+.profile-avatar-btn:hover {
+  transform: scale(1.05);
+}
+.profile-avatar-btn:active {
+  transform: scale(0.97);
+}
+.profile-avatar-btn .avatar-ring {
+  transition: box-shadow 0.3s ease;
+}
+.profile-avatar-btn:hover .avatar-ring.verified {
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+  animation: ringPulse 1.5s ease-out infinite;
+}
+.profile-avatar-btn:hover .avatar-ring.unverified {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+}
+
+/* Edit Profile button */
+.edit-btn {
+  transition: background 0.2s ease, transform 0.15s ease-out, box-shadow 0.2s ease;
+}
+.edit-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+.edit-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: none;
+}
+.edit-btn:focus-visible {
+  outline: 2px solid rgba(34, 197, 94, 0.5);
+  outline-offset: 3px;
+}
+
+/* Add Vehicle button */
+.add-vehicle-btn {
+  width: 100%;
+  margin-top: 14px;
+  background: #22c55e;
+  border: none;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 12px 14px;
+  border-radius: 12px;
+  letter-spacing: 0.6px;
+  transition: background 0.2s ease, transform 0.15s ease-out, box-shadow 0.2s ease;
+}
+.add-vehicle-btn:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.25);
+}
+.add-vehicle-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: none;
+}
+.add-vehicle-btn:focus-visible {
+  outline: 2px solid rgba(34, 197, 94, 0.5);
+  outline-offset: 3px;
+}
+
+/* Notification bell button */
+.bell-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: var(--button-secondary-bg);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease-out;
+}
+.bell-btn:hover {
+  background: var(--button-secondary-hover);
+  animation: bellShake 0.6s ease-out;
+}
+.bell-btn:active {
+  transform: scale(0.92);
+}
+.bell-btn:focus-visible {
+  outline: 2px solid rgba(34, 197, 94, 0.5);
+  outline-offset: 2px;
+}
+
+/* View All link */
+.view-all-link {
+  background: none;
+  border: none;
+  color: #22c55e;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: color 0.2s ease;
+}
+.view-all-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: #22c55e;
+  transition: width 0.25s ease-out;
+}
+.view-all-link:hover {
+  color: #16a34a;
+}
+.view-all-link:hover::after {
+  width: 100%;
+}
+.view-all-link:focus-visible {
+  outline: 2px solid rgba(34, 197, 94, 0.5);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* History row hover */
+.history-row-interactive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease, padding-left 0.2s ease-out;
+  border-radius: 8px;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.history-row-interactive:hover {
+  background: rgba(34, 197, 94, 0.04);
+  padding-left: 12px;
+}
+.history-row-interactive:active {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+/* Truck row hover */
+.truck-row-interactive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: background 0.2s ease, padding-left 0.2s ease-out;
+  border-radius: 8px;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.truck-row-interactive:hover {
+  background: rgba(34, 197, 94, 0.04);
+  padding-left: 12px;
+}
+.truck-row-interactive:active {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+/* Settings row hover */
+.settings-row-interactive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 20px;
+  cursor: pointer;
+  transition: background 0.2s ease, padding-left 0.2s ease-out;
+}
+.settings-row-interactive:hover {
+  background: rgba(34, 197, 94, 0.04);
+  padding-left: 24px;
+}
+.settings-row-interactive:active {
+  background: rgba(34, 197, 94, 0.08);
+}
+.settings-row-interactive .settings-chevron {
+  transition: transform 0.2s ease-out;
+}
+.settings-row-interactive:hover .settings-chevron {
+  transform: translateX(3px);
+}
+
+/* Status badge hover */
+.status-badge-interactive {
+  transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+  cursor: default;
+}
+.status-badge-interactive:hover {
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Back button */
+.back-btn-interactive {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  color: var(--text-primary);
+  transition: transform 0.15s ease-out;
+  border-radius: 6px;
+}
+.back-btn-interactive:hover {
+  transform: translateX(-3px);
+}
+.back-btn-interactive:active {
+  transform: translateX(-1px) scale(0.95);
+}
+.back-btn-interactive:focus-visible {
+  outline: 2px solid rgba(34, 197, 94, 0.5);
+  outline-offset: 4px;
+}
+
+/* Contact info row */
+.contact-row-interactive {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-color);
+  gap: 12px;
+  transition: background 0.2s ease;
+  border-radius: 8px;
+  margin: 0 -8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.contact-row-interactive:hover {
+  background: rgba(34, 197, 94, 0.04);
+}
+.contact-row-interactive .contact-icon-circle-anim {
+  transition: transform 0.2s ease-out;
+}
+.contact-row-interactive:hover .contact-icon-circle-anim {
+  transform: scale(1.08);
+}
+
+/* Verified / Tier pills hover */
+.verified-pill-interactive {
+  border-radius: 20px;
+  padding: 3px 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+  cursor: default;
+}
+.verified-pill-interactive:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Rating pill hover */
+.rating-pill-interactive {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e8faf2;
+  border-radius: 20px;
+  padding: 5px 14px;
+  transition: transform 0.15s ease-out, box-shadow 0.2s ease;
+  cursor: default;
+}
+.rating-pill-interactive:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.12);
+}
+
+/* Profile card hover */
+.profile-card-interactive {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  margin: 0 16px;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.profile-card-interactive:hover {
+  border-color: rgba(34, 197, 94, 0.25);
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.06);
+}
+
+/* Menu dropdown animation */
+.menu-dropdown-anim {
+  animation: menuScaleIn 0.18s ease-out both;
+}
+
+/* Menu item hover */
+.menu-item-interactive {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.15s ease;
+}
+.menu-item-interactive:hover {
+  background: rgba(34, 197, 94, 0.06);
+}
+
+/* Action buttons (Update / Delete in truck detail) */
+.action-btn-green {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #22c55e;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 12px 14px;
+  border-radius: 12px;
+  letter-spacing: 0.6px;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s ease, transform 0.15s ease-out, box-shadow 0.2s ease;
+}
+.action-btn-green:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.25);
+}
+.action-btn-green:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: none;
+}
+.action-btn-green:focus-visible {
+  outline: 2px solid rgba(34, 197, 94, 0.5);
+  outline-offset: 3px;
+}
+
+.action-btn-red {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: #ef4444;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 12px 14px;
+  border-radius: 12px;
+  letter-spacing: 0.6px;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.2s ease, transform 0.15s ease-out, box-shadow 0.2s ease;
+}
+.action-btn-red:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
+}
+.action-btn-red:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: none;
+}
+.action-btn-red:focus-visible {
+  outline: 2px solid rgba(239, 68, 68, 0.5);
+  outline-offset: 3px;
+}
+
+/* Subpage history/truck row hover */
+.subpage-row-interactive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, padding-left 0.2s ease-out;
+}
+.subpage-row-interactive:hover {
+  background: rgba(34, 197, 94, 0.04);
+  padding-left: 22px;
+}
+.subpage-row-interactive:active {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+/* All-trucks row hover */
+.alltrucks-row-interactive {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.alltrucks-row-interactive:hover {
+  background: rgba(34, 197, 94, 0.04);
+}
+
+/* Truck image hover */
+.truck-img-hover {
+  transition: transform 0.2s ease-out;
+  border-radius: 13px;
+  overflow: hidden;
+}
+.truck-img-hover:hover {
+  transform: scale(1.04);
+}
+
+/* More-vertical button hover */
+.more-btn-interactive {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-secondary);
+  border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.more-btn-interactive:hover {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--text-primary);
+}
+
+/* Dark mode adjustments for interactive elements */
+.dark-mode .history-row-interactive:hover,
+.dark-mode .truck-row-interactive:hover,
+.dark-mode .settings-row-interactive:hover,
+.dark-mode .contact-row-interactive:hover,
+.dark-mode .subpage-row-interactive:hover,
+.dark-mode .alltrucks-row-interactive:hover {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.dark-mode .profile-card-interactive:hover {
+  border-color: rgba(34, 197, 94, 0.35);
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.1);
+}
+
+.dark-mode .menu-item-interactive:hover {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.dark-mode .edit-btn:hover {
+  filter: brightness(1.2);
+}
+
+.dark-mode .bell-btn:hover {
+  background: rgba(148, 163, 184, 0.18);
+}
+/* ════════════════════════════════════════════
+   PROFILE PAGE — DESKTOP SETTINGS PANEL
+   Append-only. Mobile untouched. ≥ 1024px
+════════════════════════════════════════════ */
+
+@media (min-width: 1024px) {
+
+  /* ── Settings toggle button in hero row ── */
+  .profile-desktop-settings-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1.5px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-radius: 10px;
+    padding: 8px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+  .profile-desktop-settings-btn:hover {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.05);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
+  }
+  .profile-desktop-settings-btn.active {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.08);
+    color: #10b981;
+  }
+
+  /* Chevron rotates to point down when panel is open */
+  .profile-desktop-settings-chevron {
+    transition: transform 0.25s ease;
+    transform: rotate(180deg); /* points down by default = "panel is closed, click to open" */
+  }
+  .profile-desktop-settings-chevron.rotated {
+    transform: rotate(0deg); /* points up = "panel is open, click to close" */
+  }
+
+  /* ── Inline settings panel ── */
+  .profile-desktop-settings-panel {
+    margin-top: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: var(--bg-primary);
+    overflow: hidden;
+    animation: settingsPanelIn 0.22s ease-out both;
+  }
+
+  @keyframes settingsPanelIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Panel header ── */
+  .profile-desktop-settings-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+  }
+  .profile-desktop-settings-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  /* Close (up-arrow) button */
+  .profile-desktop-settings-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.2s ease;
+  }
+  .profile-desktop-settings-close-btn:hover {
+    background: rgba(16, 185, 129, 0.08);
+    color: #10b981;
+    transform: translateY(-1px);
+  }
+  .profile-desktop-settings-close-btn:active {
+    transform: scale(0.93);
+  }
+
+  /* ── Groups layout inside panel ── */
+  .profile-desktop-settings-groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .profile-desktop-settings-group {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .profile-desktop-settings-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+    padding-left: 2px;
+  }
+
+  .profile-desktop-settings-group-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  /* ── Individual setting row ── */
+  .profile-desktop-settings-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    position: relative;
+  }
+  .profile-desktop-settings-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 48px;
+    right: 0;
+    height: 1px;
+    background: var(--border-color);
+  }
+  .profile-desktop-settings-item:hover {
+    background: rgba(16, 185, 129, 0.04);
+  }
+  .profile-desktop-settings-item.red:hover {
+    background: rgba(239, 68, 68, 0.04);
+  }
+
+  /* Icon circle */
+  .profile-desktop-settings-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--app-green, #10b981);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--app-green, #10b981);
+  }
+  .profile-desktop-settings-icon.red {
+    border-color: #fecaca;
+    background: rgba(239, 68, 68, 0.07);
+    color: #ef4444;
+  }
+
+  .profile-desktop-settings-label {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  .profile-desktop-settings-label.red {
+    color: #ef4444;
+  }
+
+  /* ── Contact email reveal box ── */
+  .profile-desktop-settings-contact-box {
+    margin: 0 12px 10px;
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    border-radius: 10px;
+    padding: 9px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    animation: settingsPanelIn 0.18s ease-out both;
+  }
+  .profile-desktop-settings-contact-label {
+    color: #166534;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .profile-desktop-settings-contact-value {
+    color: #14532d;
+    font-size: 13px;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  /* Dark mode tweaks */
+  .dark-mode .profile-desktop-settings-contact-box {
+    background: rgba(22, 163, 74, 0.12);
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+  .dark-mode .profile-desktop-settings-contact-label { color: #86efac; }
+  .dark-mode .profile-desktop-settings-contact-value { color: #dcfce7; }
+  .dark-mode .profile-desktop-settings-icon.red {
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+}

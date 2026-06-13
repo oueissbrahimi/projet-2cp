@@ -1,0 +1,283 @@
+/* SubscriptionLimitModal.css - Subscription limit error modal styling */
+
+.subscription-limit-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+  animation: subscription-limit-fade-in 0.2s ease-out;
+}
+
+@keyframes subscription-limit-fade-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(2px);
+  }
+}
+
+.subscription-limit-modal {
+  background: var(--modal-bg, #fff);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 420px;
+  width: 90%;
+  padding: 32px 24px;
+  position: relative;
+  animation: subscription-limit-slide-up 0.3s ease-out;
+  border: 1px solid var(--modal-border, #f0f0f0);
+}
+
+@keyframes subscription-limit-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subscription-limit-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-secondary, #666);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.subscription-limit-close:hover {
+  background-color: var(--hover-bg, #f0f0f0);
+  color: var(--text-primary, #000);
+}
+
+.subscription-limit-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+.subscription-limit-icon {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--app-green);
+  border-radius: 50%;
+  animation: modal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes subscription-limit-bounce {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.subscription-limit-emoji {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.subscription-limit-alert-icon {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--modal-bg, #fff);
+  border-radius: 50%;
+  padding: 4px;
+  color: #dc2626;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.subscription-limit-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary, #000);
+  margin: 8px 0 0;
+  line-height: 1.3;
+}
+
+.subscription-limit-description {
+  font-size: 14px;
+  color: var(--text-secondary, #666);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.subscription-limit-message {
+  background-color: var(--info-bg, #f3f4f6);
+  border-left: none /* removed side-tab */;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-secondary, #666);
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.subscription-limit-message strong {
+  color: var(--text-primary, #000);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.subscription-limit-info-box {
+  background-color: var(--warning-bg, #fef3c7);
+  border: 1px solid var(--warning-border, #fde68a);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 13px;
+  color: var(--text-secondary, #666);
+  margin: 4px 0;
+}
+
+.subscription-limit-info-box p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .subscription-limit-modal {
+    --modal-bg: #1f2937;
+    --modal-border: #374151;
+    --text-primary: #f3f4f6;
+    --text-secondary: #d1d5db;
+    --hover-bg: #374151;
+    --info-bg: #111827;
+    --warning-bg: #78350f;
+    --warning-border: #b45309;
+  }
+
+  .subscription-limit-icon {
+    background: var(--app-green);
+  }
+
+  .subscription-limit-message {
+    background-color: #111827;
+    border-left-color: #60a5fa;
+  }
+}
+
+.subscription-limit-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.subscription-limit-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.subscription-limit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.subscription-limit-btn:active {
+  transform: translateY(0);
+}
+
+.subscription-limit-btn-secondary {
+  background-color: var(--btn-secondary-bg, #f3f4f6);
+  color: var(--text-primary, #000);
+  border: 1px solid var(--btn-secondary-border, #e5e7eb);
+}
+
+.subscription-limit-btn-secondary:hover {
+  background-color: var(--btn-secondary-hover, #e5e7eb);
+}
+
+.subscription-limit-btn-primary {
+  background: var(--app-green);
+  color: white;
+  font-weight: 700;
+}
+
+.subscription-limit-btn-primary:hover {
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+}
+
+.subscription-limit-btn-primary:active {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+/* Dark mode button styles */
+@media (prefers-color-scheme: dark) {
+  .subscription-limit-btn-secondary {
+    --btn-secondary-bg: #374151;
+    --btn-secondary-border: #4b5563;
+    --btn-secondary-hover: #4b5563;
+  }
+
+  .subscription-limit-btn-primary {
+    background: var(--app-green);
+  }
+
+  .subscription-limit-btn-primary:hover {
+    box-shadow: 0 8px 20px rgba(96, 165, 250, 0.4);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .subscription-limit-modal {
+    max-width: 100%;
+    width: 95%;
+    padding: 24px 20px;
+  }
+
+  .subscription-limit-title {
+    font-size: 18px;
+  }
+
+  .subscription-limit-actions {
+    flex-direction: column;
+  }
+
+  .subscription-limit-btn {
+    padding: 12px 16px;
+  }
+}
